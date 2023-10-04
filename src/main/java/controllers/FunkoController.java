@@ -9,10 +9,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class FunkoController {
     private static FunkoController instance;
@@ -64,10 +63,34 @@ public class FunkoController {
             } catch (IOException e) {
                 System.out.println("Error al leer el archivo CSV: " + e.getMessage());
             }
-            funkos.forEach(System.out::println);
             return funkos;
         });
     }
 
+    public CompletableFuture<Funko> expensiveFunko() {
+        return CompletableFuture.supplyAsync(() -> funkos.stream().max(Comparator.comparingDouble(Funko::precio)).get());
+    }
 
+    public CompletableFuture<Double> averagePrice() {
+        return CompletableFuture.supplyAsync(() -> funkos.stream().mapToDouble(Funko::precio).average().getAsDouble());
+    }
+
+    public CompletableFuture<Map<Modelo, List<Funko>>> groupByModelo() {
+        return CompletableFuture.supplyAsync(() -> funkos.stream().collect(Collectors.groupingBy(Funko::modelo)));
+    }
+
+    public CompletableFuture<Map<Modelo, Long>> funkosByModelo() {
+        return CompletableFuture.supplyAsync(() -> funkos.stream().collect(Collectors.groupingBy(Funko::modelo, Collectors.counting())));
+    }
+
+    public CompletableFuture<List<Funko>> funkosIn2023(){
+        return CompletableFuture.supplyAsync(() -> funkos.stream().filter(funko -> funko.fechaLanzamiento().getYear() == 2023).collect(Collectors.toList()));
+    }
+    public CompletableFuture<Double> numberStitch(){
+        return CompletableFuture.supplyAsync(() -> (double) funkos.stream().filter(funko -> funko.nombre().contains("Stitch")).count());
+        }
+
+    public CompletableFuture<List<Funko>> funkoStitch(){
+        return CompletableFuture.supplyAsync(() -> funkos.stream().filter(funko -> funko.nombre().contains("Stitch")).collect(Collectors.toList()));
+    }
 }
