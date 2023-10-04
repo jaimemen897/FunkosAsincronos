@@ -1,6 +1,5 @@
 package models;
 
-
 import enums.Modelo;
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +7,14 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.UUID;
 
-
+@Data
 @Builder
-public record Funko(UUID cod, String nombre, Modelo modelo, double precio, LocalDate fechaLanzamiento) {
+public class Funko {
+    UUID id;
+    UUID cod;
+    Long id2;
+    String nombre;
+    Modelo modelo;
+    double precio;
+    LocalDate fechaLanzamiento;
 }

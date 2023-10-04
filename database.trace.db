@@ -1,0 +1,40 @@
+2023-10-04 19:29:59.929795+02:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLFeatureNotSupportedException: Caracteristica no soportada: "UUID"
+Feature not supported: "UUID"; SQL statement:
+CREATE TABLE FUNKOS
+(
+    ID                UUID AUTO_INCREMENT PRIMARY KEY,
+    COD               UUID NOT NULL DEFAULT UUID(),
+    ID_2              LONG NOT NULL,
+    NOMBRE            VARCHAR(255),
+    MODELO            ENUM('MARVEL', 'DISNEY', 'ANIME', 'OTROS'),
+    PRECIO            DECIMAL(10,2),
+    FECHA_LANZAMIENTO DATE,
+    CREATED_AT        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) [50100-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:568)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.message.DbException.getUnsupportedException(DbException.java:287)
+	at org.h2.command.ddl.SequenceOptions.getBounds(SequenceOptions.java:316)
+	at org.h2.command.ddl.SequenceOptions.getBounds(SequenceOptions.java:244)
+	at org.h2.schema.Sequence.<init>(Sequence.java:100)
+	at org.h2.table.Column.initializeSequence(Column.java:459)
+	at org.h2.command.ddl.CommandWithColumns.generateSequences(CommandWithColumns.java:103)
+	at org.h2.command.ddl.CreateTable.update(CreateTable.java:113)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:169)
+	at org.h2.command.Command.executeUpdate(Command.java:256)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:262)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:94)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.apache.ibatis.jdbc.ScriptRunner.executeStatement(ScriptRunner.java:250)
+	at org.apache.ibatis.jdbc.ScriptRunner.handleLine(ScriptRunner.java:225)
+	at org.apache.ibatis.jdbc.ScriptRunner.executeLineByLine(ScriptRunner.java:154)
+	at org.apache.ibatis.jdbc.ScriptRunner.runScript(ScriptRunner.java:121)
+	at services.database.DataBaseManager.openConnection(DataBaseManager.java:56)
+	at services.database.DataBaseManager.<init>(DataBaseManager.java:23)
+	at services.database.DataBaseManager.getInstance(DataBaseManager.java:34)
+	at Main.main(Main.java:17)

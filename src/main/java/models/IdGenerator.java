@@ -17,7 +17,7 @@ public class IdGenerator {
         return instance;
     }
 
-    public long getAndIncrement() {
+    public Long getAndIncrement() {
         return myId.getAndIncrement();
     }
 }

@@ -18,6 +18,9 @@ public interface CrudRepository<T, ID> {
     // Buscar por ID
     CompletableFuture<Optional<Funko>> findById(ID id) throws SQLException;
 
+    // Buscar por nombre
+    CompletableFuture<List<Funko>> findByNombre(String nombre) throws SQLException;
+
     // Buscar todos
     CompletableFuture<List<Funko>> findAll() throws SQLException;
 

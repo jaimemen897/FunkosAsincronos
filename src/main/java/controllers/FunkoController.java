@@ -2,6 +2,7 @@ package controllers;
 
 import enums.Modelo;
 import models.Funko;
+import models.IdGenerator;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +17,7 @@ import java.util.concurrent.CompletableFuture;
 public class FunkoController {
     private static FunkoController instance;
     private final List<Funko> funkos = new ArrayList<>();
+    private final IdGenerator idGenerator = IdGenerator.getInstance();
 
     public static FunkoController getInstance() {
         if (instance == null) {
@@ -47,7 +49,15 @@ public class FunkoController {
 
                     UUID cod = UUID.fromString(split[0].substring(0, 35));
 
-                    funkos.add(new Funko(cod, split[1], Modelo.valueOf(split[2]), Double.parseDouble(split[3]), dia));
+                    funkos.add(Funko.builder()
+                            .id(UUID.randomUUID())
+                            .cod(cod)
+                            .id2(idGenerator.getAndIncrement())
+                            .nombre(split[1])
+                            .modelo(Modelo.valueOf(split[2]))
+                            .precio(Double.parseDouble(split[3]))
+                            .fechaLanzamiento(dia)
+                            .build());
                     line = br.readLine();
                 }
 
@@ -58,7 +68,6 @@ public class FunkoController {
             return funkos;
         });
     }
-
 
 
 }
