@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException;
 public interface FunkosService {
     List<Funko> findAll() throws SQLException, ExecutionException, InterruptedException;
 
-    List<Funko> findAllByNombre(String nombre) throws SQLException, ExecutionException, InterruptedException;
+    List<Funko> findByNombre(String nombre) throws SQLException, ExecutionException, InterruptedException;
 
     Optional<Funko> findById(long id) throws SQLException, ExecutionException, InterruptedException;
 

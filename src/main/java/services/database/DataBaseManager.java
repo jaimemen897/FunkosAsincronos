@@ -15,7 +15,7 @@ import java.util.Properties;
 @Getter
 public class DataBaseManager implements AutoCloseable {
     private static DataBaseManager instance;
-    private final String dir = Paths.get("").toAbsolutePath() + File.separator + "src" + File.separator + "main" + File.separator + "java" + File.separator + "resources" + File.separator;
+    private final String dir = Paths.get("").toAbsolutePath() + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator;
     private final String propertiesPath = Paths.get("").toAbsolutePath() + File.separator + "resources" + File.separator + "database.properties";
     private HikariDataSource hikariDataSource;
 
