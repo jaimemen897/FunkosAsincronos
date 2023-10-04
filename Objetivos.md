@@ -9,7 +9,7 @@ En el directorio data tienes un csv de muestra de Funkos. Con la siguiente estru
 
 Vamos a trabajar totalmente asíncrono.
 
-- [ ] Debes cargar estos datos en una base de datos H2 en fichero, llamada "funkos", teniendo en cuenta que los datos de 
+- [x] Debes cargar estos datos en una base de datos H2 en fichero, llamada "funkos", teniendo en cuenta que los datos de 
 conexión deben leerse de un fichero de propiedades y que debe estar gestionada por un manejador o servicio de bases de 
 datos. 
 - [ ] Esta base de datos usará un pool de conexiones con HikaryCP.
@@ -27,7 +27,7 @@ datos.
     - [x] created_at: marca de tiempo que toma por valor si no se le pasa la fecha completa actual al crearse la entidad
     - [x] updated_at: marca de tiempo que toma por valor si no se le pasa la fecha completa al crearse la entidad o actualizarse.
 
-- [ ] Debes crear un repositorio CRUD totalmente asíncrono completo para la gestión de Funkos. Además, de las operaciones CRUD 
+- [x] Debes crear un repositorio CRUD totalmente asíncrono completo para la gestión de Funkos. Además, de las operaciones CRUD 
 normales, debes incluir una que se llame findByNombre, donde se pueda buscar por nombres que contengan el patrón indicado. 
 Se debe asegurar una instancia única de este repositorio.
 
@@ -55,13 +55,13 @@ Por lo tanto nuestra estructura es:
 Se debe mostrar un ejemplo de cada uno de los métodos del servicio en el main con los casos de ejecución correcta e incorrecta. Además, en el main, las salidas deben estar localizadas tanto en fechas como moneda a ESPAÑA.
 
 Se debe además sacar las consultas en el main de manera asíncrona:
-- [ ] Funko más caro.
-- [ ] Media de precio de Funkos.
-- [ ] Funkos agrupados por modelos.
-- [ ] Número de funkos por modelos.
-- [ ] Funkos que han sido lanzados en 2023.
-- [ ] Número de funkos de Stitch.
-- [ ] Listado de funkos de Stitch.
+- [x] Funko más caro.
+- [x] Media de precio de Funkos.
+- [x] Funkos agrupados por modelos.
+- [x] Número de funkos por modelos.
+- [x] Funkos que han sido lanzados en 2023.
+- [x] Número de funkos de Stitch.
+- [x] Listado de funkos de Stitch.
 
 Finalmente se pide testear todos los caso correctos o incorrectos de los métodos de:
 - [ ] Caché
