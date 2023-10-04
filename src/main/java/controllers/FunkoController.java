@@ -68,29 +68,30 @@ public class FunkoController {
     }
 
     public CompletableFuture<Funko> expensiveFunko() {
-        return CompletableFuture.supplyAsync(() -> funkos.stream().max(Comparator.comparingDouble(Funko::precio)).get());
+        return CompletableFuture.supplyAsync(() -> funkos.stream().max(Comparator.comparingDouble(Funko::getPrecio)).get());
     }
 
     public CompletableFuture<Double> averagePrice() {
-        return CompletableFuture.supplyAsync(() -> funkos.stream().mapToDouble(Funko::precio).average().getAsDouble());
+        return CompletableFuture.supplyAsync(() -> funkos.stream().mapToDouble(Funko::getPrecio).average().getAsDouble());
     }
 
     public CompletableFuture<Map<Modelo, List<Funko>>> groupByModelo() {
-        return CompletableFuture.supplyAsync(() -> funkos.stream().collect(Collectors.groupingBy(Funko::modelo)));
+        return CompletableFuture.supplyAsync(() -> funkos.stream().collect(Collectors.groupingBy(Funko::getModelo)));
     }
 
     public CompletableFuture<Map<Modelo, Long>> funkosByModelo() {
-        return CompletableFuture.supplyAsync(() -> funkos.stream().collect(Collectors.groupingBy(Funko::modelo, Collectors.counting())));
+        return CompletableFuture.supplyAsync(() -> funkos.stream().collect(Collectors.groupingBy(Funko::getModelo, Collectors.counting())));
     }
 
-    public CompletableFuture<List<Funko>> funkosIn2023(){
-        return CompletableFuture.supplyAsync(() -> funkos.stream().filter(funko -> funko.fechaLanzamiento().getYear() == 2023).collect(Collectors.toList()));
+    public CompletableFuture<List<Funko>> funkosIn2023() {
+        return CompletableFuture.supplyAsync(() -> funkos.stream().filter(funko -> funko.getFechaLanzamiento().getYear() == 2023).collect(Collectors.toList()));
     }
-    public CompletableFuture<Double> numberStitch(){
-        return CompletableFuture.supplyAsync(() -> (double) funkos.stream().filter(funko -> funko.nombre().contains("Stitch")).count());
-        }
 
-    public CompletableFuture<List<Funko>> funkoStitch(){
-        return CompletableFuture.supplyAsync(() -> funkos.stream().filter(funko -> funko.nombre().contains("Stitch")).collect(Collectors.toList()));
+    public CompletableFuture<Double> numberStitch() {
+        return CompletableFuture.supplyAsync(() -> (double) funkos.stream().filter(funko -> funko.getNombre().contains("Stitch")).count());
+    }
+
+    public CompletableFuture<List<Funko>> funkoStitch() {
+        return CompletableFuture.supplyAsync(() -> funkos.stream().filter(funko -> funko.getNombre().contains("Stitch")).collect(Collectors.toList()));
     }
 }

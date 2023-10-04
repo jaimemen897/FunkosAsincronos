@@ -23,7 +23,7 @@ public class FunkosServiceImpl implements FunkosService{
 
     private FunkosServiceImpl(FunkoRepository funkoRepository) {
         this.funkoRepository = funkoRepository;
-        this.cache = new FunkoCacheImpl(CACHE_SIZE);
+        this.cache = new FunkoCacheImpl(CACHE_SIZE, 2000);
     }
 
     public static FunkosServiceImpl getInstance(FunkoRepository funkoRepository) {
