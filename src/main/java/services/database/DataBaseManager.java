@@ -24,7 +24,7 @@ public class DataBaseManager implements AutoCloseable {
     }
 
 
-    public static DataBaseManager getInstance() {
+    public static synchronized DataBaseManager getInstance() {
         try {
             Class.forName("org.h2.Driver");
         } catch (ClassNotFoundException e) {
@@ -36,7 +36,7 @@ public class DataBaseManager implements AutoCloseable {
         return instance;
     }
 
-    private void openConnection() {
+    private synchronized void openConnection() {
         try {
             InputStream dbProps = ClassLoader.getSystemResourceAsStream("database.properties");
             Properties properties = new Properties();
