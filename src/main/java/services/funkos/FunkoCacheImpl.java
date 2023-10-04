@@ -17,8 +17,8 @@ public class FunkoCacheImpl implements FunkoCache {
     private final ScheduledExecutorService cleaner;
     private final AtomicLong lastAccessTime;
 
-    public FunkoCacheImpl(int maxSize, long cacheExpirationMillis) {
-        this.cacheExpirationMillis = cacheExpirationMillis;
+    public FunkoCacheImpl(int maxSize) {
+        this.cacheExpirationMillis = 2000;
         this.maxSize = maxSize;
         this.cache = new ConcurrentHashMap<>(maxSize);
         this.cleaner = Executors.newSingleThreadScheduledExecutor();

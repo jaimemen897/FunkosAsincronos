@@ -3,13 +3,12 @@ import enums.Modelo;
 import models.Funko;
 import repositories.funkos.FunkoRepositoryImpl;
 import services.database.DataBaseManager;
+import services.funkos.FunkoCacheImpl;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.UUID;
+import java.util.concurrent.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,7 +16,6 @@ public class Main {
         DataBaseManager db = DataBaseManager.getInstance();
         FunkoRepositoryImpl funkoRepository = FunkoRepositoryImpl.getInstance(db);
         funkoRepository.findAll().thenAcceptAsync(System.out::println);
-
 
 
 

@@ -14,16 +14,16 @@ conexión deben leerse de un fichero de propiedades y que debe estar gestionada 
 datos. 
 - [ ] Esta base de datos usará un pool de conexiones con HikaryCP.
 
-- [ ] Además, vamos a tener un IdGenerator, que se encargará de asignar las clases de manera asíncrona. Deberá estar protegido para accesos concurrente en entornos multihilo.
+- [x] Además, vamos a tener un IdGenerator, que se encargará de asignar las clases de manera asíncrona. Deberá estar protegido para accesos concurrente en entornos multihilo.
 
-- [ ] El formato de la tabla FUNKOS es el siguiente:
-    - [ ] ID: autonumérico y clave primaria. (mirar si se puede hacer con UUID en el sql)
-    - [ ] cod: UUID, no nulo, y se puede generar automáticamente un valor por defecto si no se le pasa. (mirar si se puede hacer con UUID en el sql)
-    - [ ] MyId: Long que puede será generado por el IdGenerator (implementar este campo cuando tengamos hecha la clase IdGenerator)
+- [x] El formato de la tabla FUNKOS es el siguiente:
+    - [x] ID: autonumérico y clave primaria. (mirar si se puede hacer con UUID en el sql)
+    - [x] cod: UUID, no nulo, y se puede generar automáticamente un valor por defecto si no se le pasa. (mirar si se puede hacer con UUID en el sql)
+    - [x] MyId: Long que puede será generado por el IdGenerator (implementar este campo cuando tengamos hecha la clase IdGenerator)
     - [x] nombre: cadena de caracteres de máximo 255.
     - [x] modelo, solo puede ser MARVEL, DISNEY, ANIME u OTROS
     - [x] precio: un número real (real es decimal? si no?)
-    - [ ] fecha_lanzamiento: es un tipo de fecha. (mirar si vale con date)
+    - [x] fecha_lanzamiento: es un tipo de fecha. (mirar si vale con date)
     - [x] created_at: marca de tiempo que toma por valor si no se le pasa la fecha completa actual al crearse la entidad
     - [x] updated_at: marca de tiempo que toma por valor si no se le pasa la fecha completa al crearse la entidad o actualizarse.
 
