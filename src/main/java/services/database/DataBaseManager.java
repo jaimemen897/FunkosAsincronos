@@ -25,14 +25,14 @@ public class DataBaseManager implements AutoCloseable {
 
 
     public static DataBaseManager getInstance() {
-        /*esta parte carga el controlador de la bbdd pero Hikary hace la
-         carga automatica porque es mas moderno asique si la quitamos
-        la clase sigue funcionando igual y simplificamos el codigo
+        /*esta parte carga el controlador de la BBDD, pero Hikari hace la
+         carga automática porque es más moderno asi que si la quitamos
+        la clase sigue funcionando igual y simplificamos el código*/
         try {
             Class.forName("org.h2.Driver");
         } catch (ClassNotFoundException e) {
             System.out.println("Error al cargar el driver: " + e.getMessage());
-        }*/
+        }
         if (instance == null) {
             instance = new DataBaseManager();
         }
@@ -52,12 +52,18 @@ public class DataBaseManager implements AutoCloseable {
 
             hikariDataSource = new HikariDataSource(config);
 
+            Connection connection = hikariDataSource.getConnection();
+
+            Reader reader = new BufferedReader(new FileReader(dir + properties.getProperty("db.init")));
+            ScriptRunner scriptRunner = new ScriptRunner(connection);
+            scriptRunner.runScript(reader);
+
             //es lo mismo pero metiendo otro try y por parametro connection y reader
-            try (Connection connection = hikariDataSource.getConnection();
+            /*try (Connection connection = hikariDataSource.getConnection();
                  Reader reader = new BufferedReader(new FileReader(dir + properties.getProperty("db.init")))) {
                 ScriptRunner scriptRunner = new ScriptRunner(connection);
                 scriptRunner.runScript(reader);
-            }
+            }*/
         } catch (SQLException | IOException e) {
             throw new RuntimeException("Error al conectar con la base de datos o al cargar el archivo de propiedades" + e.getMessage());
            /* Connection connection = hikariDataSource.getConnection();

@@ -1,6 +1,7 @@
 package controllers;
 
 import enums.Modelo;
+import lombok.Getter;
 import models.Funko;
 import models.IdGenerator;
 
@@ -13,6 +14,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+@Getter
 public class FunkoController {
     private static FunkoController instance;
     private final List<Funko> funkos = new ArrayList<>();
