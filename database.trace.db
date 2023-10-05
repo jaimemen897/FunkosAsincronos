@@ -38,3 +38,59 @@ CREATE TABLE FUNKOS
 	at services.database.DataBaseManager.<init>(DataBaseManager.java:23)
 	at services.database.DataBaseManager.getInstance(DataBaseManager.java:34)
 	at Main.main(Main.java:17)
+2023-10-05 10:42:09.593597+02:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLNonTransientConnectionException: La base de datos ha sido cerrada
+The database has been closed; SQL statement:
+SELECT * FROM FUNKO [90098-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:690)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.message.DbException.get(DbException.java:188)
+	at org.h2.engine.SessionLocal.getDatabase(SessionLocal.java:666)
+	at org.h2.command.Prepared.getDatabase(Prepared.java:496)
+	at org.h2.command.Prepared.<init>(Prepared.java:86)
+	at org.h2.command.query.Query.<init>(Query.java:155)
+	at org.h2.command.query.Select.<init>(Select.java:160)
+	at org.h2.command.Parser.parseSelect(Parser.java:2811)
+	at org.h2.command.Parser.parseQueryPrimary(Parser.java:2708)
+	at org.h2.command.Parser.parseQueryTerm(Parser.java:2564)
+	at org.h2.command.Parser.parseQueryExpressionBody(Parser.java:2543)
+	at org.h2.command.Parser.parseQueryExpressionBodyAndEndOfQuery(Parser.java:2536)
+	at org.h2.command.Parser.parseQueryExpression(Parser.java:2529)
+	at org.h2.command.Parser.parseQuery(Parser.java:2498)
+	at org.h2.command.Parser.parsePrepared(Parser.java:627)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcPreparedStatement.<init>(JdbcPreparedStatement.java:93)
+	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:316)
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:327)
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java)
+	at repositories.funkos.FunkoRepositoryImpl.lambda$findAll$3(FunkoRepositoryImpl.java:105)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1760)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:373)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1182)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1655)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1622)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:165)
+2023-10-05 11:25:25.864668+02:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "FUNKO" no encontrada
+Table "FUNKO" not found; SQL statement:
+SELECT * FROM FUNKO [42102-224]
+2023-10-05 11:26:24.733950+02:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "FUNKO" no encontrada
+Table "FUNKO" not found; SQL statement:
+SELECT * FROM FUNKO [42102-224]
+2023-10-05 11:27:31.380121+02:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "FUNKO" no encontrada
+Table "FUNKO" not found; SQL statement:
+SELECT * FROM FUNKO [42102-224]
+2023-10-05 11:30:00.347037+02:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "FUNKO" no encontrada
+Table "FUNKO" not found; SQL statement:
+SELECT * FROM FUNKO [42102-224]

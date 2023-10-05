@@ -1,25 +1,30 @@
 import controllers.FunkoController;
 import enums.Modelo;
 import models.Funko;
+import models.IdGenerator;
 import repositories.funkos.FunkoRepositoryImpl;
 import services.database.DataBaseManager;
-import services.funkos.FunkoCacheImpl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
 import java.util.concurrent.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         FunkoController funkoController = FunkoController.getInstance();
-        DataBaseManager db = DataBaseManager.getInstance();
+       /* DataBaseManager db = DataBaseManager.getInstance();
         FunkoRepositoryImpl funkoRepository = FunkoRepositoryImpl.getInstance(db);
-        funkoRepository.findAll().thenAcceptAsync(System.out::println);
+        funkoRepository.findAll().thenAcceptAsync(System.out::println);*/
+        IdGenerator myID = IdGenerator.getInstance();
 
-
-
-        Callable<List<Funko>> loadCsv = () -> funkoController.loadCsv().get();
+        Callable<List<Funko>> loadCsv = () -> {
+            List<Funko> funkoList = funkoController.loadCsv().get();
+            funkoList.forEach(funko -> funko.setId2(myID.getAndIncrement()));
+            return funkoList;
+        };
         Callable<Funko> expensiveFunko = () -> funkoController.expensiveFunko().get();
         Callable<Double> averagePrice = () -> funkoController.averagePrice().get();
         Callable<Map<Modelo, List<Funko>>> groupByModelo = () -> funkoController.groupByModelo().get();
@@ -28,11 +33,10 @@ public class Main {
         Callable<Double> numberStitch = () -> funkoController.numberStitch().get();
         Callable<List<Funko>> funkoStitch = () -> funkoController.funkoStitch().get();
 
+
         ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 
-
-        executorService.shutdown();
         Future<List<Funko>> future = executorService.submit(loadCsv);
         Future<Funko> future2 = executorService.submit(expensiveFunko);
         Future<Double> future3 = executorService.submit(averagePrice);
@@ -41,6 +45,7 @@ public class Main {
         Future<List<Funko>> future6 = executorService.submit(funkosIn2023);
         Future<Double> future7 = executorService.submit(numberStitch);
         Future<List<Funko>> future8 = executorService.submit(funkoStitch);
+
 
         try {
             System.out.println("Funkos: " + future.get());
@@ -54,7 +59,7 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
-
         executorService.shutdown();
+
     }
 }
