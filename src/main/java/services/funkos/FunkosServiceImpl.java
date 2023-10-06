@@ -5,28 +5,28 @@ import models.Funko;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import repositories.funkos.FunkoRepository;
+import repositories.funkos.FunkoRepositoryImpl;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-//TODO: Implementar todos estos métodos
-public class FunkosServiceImpl implements FunkosService{
+public class FunkosServiceImpl implements FunkosService {
 
     private static final int CACHE_SIZE = 10;
 
     private static FunkosServiceImpl instance;
     private final FunkoCache cache;
     private final Logger logger = LoggerFactory.getLogger(FunkosServiceImpl.class);
-    private final FunkoRepository funkoRepository;
+    private final FunkoRepositoryImpl funkoRepository;
 
-    private FunkosServiceImpl(FunkoRepository funkoRepository) {
+    private FunkosServiceImpl(FunkoRepositoryImpl funkoRepository) {
         this.funkoRepository = funkoRepository;
-        this.cache = new FunkoCacheImpl(CACHE_SIZE, 2000);
+        this.cache = new FunkoCacheImpl();
     }
 
-    public static FunkosServiceImpl getInstance(FunkoRepository funkoRepository) {
+    public static FunkosServiceImpl getInstance(FunkoRepositoryImpl funkoRepository) {
         if (instance == null) {
             instance = new FunkosServiceImpl(funkoRepository);
         }
@@ -37,6 +37,7 @@ public class FunkosServiceImpl implements FunkosService{
     @Override
     public List<Funko> findAll() throws SQLException, ExecutionException, InterruptedException {
         return funkoRepository.findAll().get();
+
     }
 
     @Override
@@ -46,26 +47,41 @@ public class FunkosServiceImpl implements FunkosService{
 
     @Override
     public Optional<Funko> findById(long id) throws SQLException, ExecutionException, InterruptedException {
-        return funkoRepository.findById(id).get();
+        Funko funko = cache.get(id);
+        if (funko != null) {
+            logger.debug("Funko obtenido de la cache con id:" + id);
+            return Optional.of(funko);
+        } else {
+            return funkoRepository.findById(id).get();
+        }
     }
 
     @Override
-    public Funko save(Funko alumno) throws SQLException, ExecutionException, InterruptedException {
-        return funkoRepository.save(alumno).get();
+    public Funko save(Funko funko) throws SQLException, ExecutionException, InterruptedException {
+        funko = funkoRepository.save(funko).get();
+        cache.put(funko.getId2(), funko);
+        return funko;
     }
 
     @Override
-    public Funko update(Funko alumno) throws SQLException, FunkoNotFoundException, ExecutionException, InterruptedException {
-        return funkoRepository.update(alumno).get();
+    public Funko update(Funko funko) throws SQLException, FunkoNotFoundException, ExecutionException, InterruptedException {
+        funko = funkoRepository.update(funko).get();
+        cache.put(funko.getId2(), funko);
+        return funko;
     }
 
     @Override
     public boolean deleteById(long id) throws SQLException, ExecutionException, InterruptedException {
-        return funkoRepository.deleteById(id).get();
+        var deleted = funkoRepository.deleteById(id).get();
+        if (deleted) {
+            cache.remove(id);
+        }
+        return deleted;
     }
 
     @Override
     public void deleteAll() throws SQLException, ExecutionException, InterruptedException {
         funkoRepository.deleteAll().get();
+        cache.clear();
     }
 }

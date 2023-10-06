@@ -32,20 +32,21 @@ public class FunkoRepositoryImpl implements FunkoRepository {
     @Override
     public CompletableFuture<Funko> save(Funko funko) {
         return CompletableFuture.supplyAsync(() -> {
-            String query = "INSERT INTO FUNKO (id, cod, id2, nombre, modelo, precio, fechaLanzamiento) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO FUNKOS (cod, id2, nombre, modelo, precio, fechaLanzamiento) VALUES (?, ?, ?, ?, ?, ?)";
             try (var connection = db.getConnection();
                  var stmt = connection.prepareStatement(query)) {
-                stmt.setString(1, funko.getId().toString());
-                stmt.setString(2, funko.getCod().toString());
-                stmt.setLong(3, funko.getId2());
-                stmt.setString(4, funko.getNombre());
-                stmt.setString(5, funko.getModelo().toString());
-                stmt.setDouble(6, funko.getPrecio());
-                stmt.setDate(7, java.sql.Date.valueOf(funko.getFechaLanzamiento()));
+                stmt.setString(1, funko.getCod().toString());
+                stmt.setLong(2, funko.getId2());
+                stmt.setString(3, funko.getNombre());
+                stmt.setString(4, funko.getModelo().toString());
+                stmt.setDouble(5, funko.getPrecio());
+                stmt.setObject(6, funko.getFechaLanzamiento());
                 stmt.executeUpdate();
             } catch (SQLException e) {
-                logger.error(e.getMessage());
+                e.printStackTrace();
+                return null;
             }
+            System.out.println("Insertando funko: " + funko);
             return funko;
         });
     }
@@ -53,14 +54,14 @@ public class FunkoRepositoryImpl implements FunkoRepository {
     @Override
     public CompletableFuture<Funko> update(Funko funko) {
         return CompletableFuture.supplyAsync(() -> {
-            String query = "UPDATE FUNKO SET nombre = ?, modelo = ?, precio = ?, fechaLanzamiento = ? WHERE id = ?";
+            String query = "UPDATE FUNKOS SET nombre = ?, modelo = ?, precio = ?, fechaLanzamiento = ? WHERE id = ?";
             try (var connection = db.getConnection();
                  var stmt = connection.prepareStatement(query)) {
                 stmt.setString(1, funko.getNombre());
                 stmt.setString(2, funko.getModelo().toString());
                 stmt.setDouble(3, funko.getPrecio());
                 stmt.setDate(4, java.sql.Date.valueOf(funko.getFechaLanzamiento()));
-                stmt.setString(5, funko.getId().toString());
+                stmt.setLong(5, funko.getId2());
                 stmt.executeUpdate();
             } catch (SQLException e) {
                 logger.error(e.getMessage());
@@ -70,17 +71,17 @@ public class FunkoRepositoryImpl implements FunkoRepository {
     }
 
     @Override
-    public CompletableFuture<Optional<Funko>> findById(Long aLong) {
+    public CompletableFuture<Optional<Funko>> findById(Long id) {
         return CompletableFuture.supplyAsync(() -> {
             Optional<Funko> optionalFunko = Optional.empty();
-            String query = "SELECT * FROM FUNKO WHERE id = ?";
+            String query = "SELECT * FROM FUNKOS WHERE id = ?";
             try (var connection = db.getConnection();
                  var stmt = connection.prepareStatement(query)) {
-                stmt.setLong(1, aLong);
+                stmt.setLong(1, id);
                 var rs = stmt.executeQuery();
                 if (rs.next()) {
                     optionalFunko = Optional.of(Funko.builder()
-                            .id(UUID.fromString(rs.getString("id")))
+
                             .cod(UUID.fromString(rs.getString("cod")))
                             .id2(rs.getLong("id2"))
                             .nombre(rs.getString("nombre"))
@@ -100,13 +101,13 @@ public class FunkoRepositoryImpl implements FunkoRepository {
     public CompletableFuture<List<Funko>> findAll() {
         return CompletableFuture.supplyAsync(() -> {
             List<Funko> lista = new ArrayList<>();
-            String query = "SELECT * FROM FUNKO";
+            String query = "SELECT * FROM FUNKOS";
             try (var connection = db.getConnection();
                  var stmt = connection.prepareStatement(query)) {
                 var rs = stmt.executeQuery();
                 while (rs.next()) {
                     lista.add(Funko.builder()
-                            .id(UUID.fromString(rs.getString("id")))
+
                             .cod(UUID.fromString(rs.getString("cod")))
                             .id2(rs.getLong("id2"))
                             .nombre(rs.getString("nombre"))
@@ -125,7 +126,7 @@ public class FunkoRepositoryImpl implements FunkoRepository {
     @Override
     public CompletableFuture<Boolean> deleteById(Long idDelete) {
         return CompletableFuture.supplyAsync(() -> {
-            String query = "DELETE FROM FUNKO WHERE id = ?";
+            String query = "DELETE FROM FUNKOS WHERE id = ?";
             try (var connection = db.getConnection();
                  var stmt = connection.prepareStatement(query)) {
                 stmt.setLong(1, idDelete);
@@ -140,7 +141,7 @@ public class FunkoRepositoryImpl implements FunkoRepository {
     @Override
     public CompletableFuture<Void> deleteAll() {
         return CompletableFuture.runAsync(() -> {
-            String query = "DELETE FROM FUNKO";
+            String query = "DELETE FROM FUNKOS";
             try (var connection = db.getConnection();
                  var stmt = connection.prepareStatement(query)) {
                 stmt.executeUpdate();
@@ -154,14 +155,14 @@ public class FunkoRepositoryImpl implements FunkoRepository {
     public CompletableFuture<List<Funko>> findByNombre(String nombre) {
         return CompletableFuture.supplyAsync(() -> {
             List<Funko> lista = new ArrayList<>();
-            String query = "SELECT * FROM FUNKO WHERE nombre = ?";
+            String query = "SELECT * FROM FUNKOS WHERE nombre = ?";
             try (var connection = db.getConnection();
                  var stmt = connection.prepareStatement(query)) {
                 stmt.setString(1, nombre);
                 var rs = stmt.executeQuery();
                 while (rs.next()) {
                     lista.add(Funko.builder()
-                            .id(UUID.fromString(rs.getString("id")))
+
                             .cod(UUID.fromString(rs.getString("cod")))
                             .id2(rs.getLong("id2"))
                             .nombre(rs.getString("nombre"))

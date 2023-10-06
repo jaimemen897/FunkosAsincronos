@@ -41,8 +41,8 @@ public class DataBaseManager implements AutoCloseable {
             InputStream dbProps = ClassLoader.getSystemResourceAsStream("database.properties");
             Properties properties = new Properties();
             properties.load(dbProps);
-            HikariConfig config = new HikariConfig();
 
+            HikariConfig config = new HikariConfig();
             config.setJdbcUrl(properties.getProperty("db.url"));
             config.setUsername(properties.getProperty("db.user"));
             config.setPassword(properties.getProperty("db.password"));
@@ -78,4 +78,4 @@ public class DataBaseManager implements AutoCloseable {
         }
     }
 
-}
+    }

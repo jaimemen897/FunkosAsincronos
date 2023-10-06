@@ -3,23 +3,22 @@ import enums.Modelo;
 import models.Funko;
 import repositories.funkos.FunkoRepositoryImpl;
 import services.database.DataBaseManager;
+import services.funkos.FunkosServiceImpl;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException {
         FunkoController funkoController = FunkoController.getInstance();
-        DataBaseManager db = DataBaseManager.getInstance();
-        FunkoRepositoryImpl funkoRepository = FunkoRepositoryImpl.getInstance(db);
-        funkoRepository.findAll().thenAcceptAsync(System.out::println);
+        FunkoRepositoryImpl funkoRepository = FunkoRepositoryImpl.getInstance(DataBaseManager.getInstance());
+        FunkosServiceImpl funkosService = FunkosServiceImpl.getInstance(funkoRepository);
 
 
-
+        System.out.println("-------------------------- OBTENCION DE DATOS --------------------------");
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         Callable<List<Funko>> loadCsv = () -> funkoController.loadCsv().get();
         Callable<Funko> expensiveFunko = () -> funkoController.expensiveFunko().get();
@@ -30,11 +29,7 @@ public class Main {
         Callable<Double> numberStitch = () -> funkoController.numberStitch().get();
         Callable<List<Funko>> funkoStitch = () -> funkoController.funkoStitch().get();
 
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-
-
-        executorService.shutdown();
         Future<List<Funko>> future = executorService.submit(loadCsv);
         Future<Funko> future2 = executorService.submit(expensiveFunko);
         Future<Double> future3 = executorService.submit(averagePrice);
@@ -44,19 +39,31 @@ public class Main {
         Future<Double> future7 = executorService.submit(numberStitch);
         Future<List<Funko>> future8 = executorService.submit(funkoStitch);
 
+
         try {
-            System.out.println("Funkos: " + future.get());
-            System.out.println("Funko más caro: " + future2.get());
-            System.out.println("Media de los precios: " + future3.get());
-            System.out.println("Funkos agrupados por modelo: " + future4.get());
-            System.out.println("Número de funkos por modelo: " + future5.get());
-            System.out.println("Funkos lanzados en 2023: " + future6.get());
-            System.out.println("Número de funkos de Stitch: " + future7.get());
-            System.out.println("Funkos de Stitch: " + future8.get());
+            System.out.println("FUNKOS: " + future.get());
+            System.out.println("FUNKO MAS CARO: " + future2.get());
+            System.out.println("PRECIO MEDIO: " + future3.get());
+            System.out.println("AGRUPADOS POR MODELO: " + future4.get());
+            System.out.println("NUMERO DE FUNKOS POR MODELO: " + future5.get());
+            System.out.println("FUNKOS LANZADOS EN 2023: " + future6.get());
+            System.out.println("NUMERO FUNKOS STITCH: " + future7.get());
+            System.out.println("FUNKOS DE STITCH: " + future8.get());
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
 
+        System.out.println("-------------------------- INSERTAMOS FUNKOS --------------------------");
+
+        for (Funko funko:funkoController.getFunkos()) {
+            funkosService.save(funko);
+        }
+        System.out.println("FUNKOS GUARDADOS EN LA BASE DE DATOS");
+
+        funkosService.findAll().forEach(System.out::println);
+
+        System.out.println(funkosService.findByNombre("Spiderman Delight"));
         executorService.shutdown();
+
     }
 }

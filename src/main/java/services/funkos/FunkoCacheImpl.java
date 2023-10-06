@@ -4,47 +4,34 @@ import models.Funko;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-//TODO: Codificar los métodos
 public class FunkoCacheImpl implements FunkoCache {
     private final Logger logger = LoggerFactory.getLogger(FunkoCacheImpl.class);
-    private final int maxSize;
-    private final long cacheExpirationMillis;
+    private final int maxSize = 10;
+
     private final Map<Long, CompletableFuture<Funko>> cache;
+
+
     private final ScheduledExecutorService cleaner;
-    private final AtomicLong lastAccessTime;
 
-    public FunkoCacheImpl(int maxSize, long cacheExpirationMillis) {
-        this.cacheExpirationMillis = cacheExpirationMillis;
-        this.maxSize = maxSize;
-        this.cache = new ConcurrentHashMap<>(maxSize);
+    public FunkoCacheImpl() {
+        this.cache = new LinkedHashMap<Long, CompletableFuture<Funko>>(maxSize, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<Long, CompletableFuture<Funko>> eldest) {
+                return size() > maxSize;
+            }
+        };
+        //Crea el programador para la limpieza automatica
         this.cleaner = Executors.newSingleThreadScheduledExecutor();
-        this.lastAccessTime = new AtomicLong(System.currentTimeMillis());
 
-        cleaner.scheduleAtFixedRate(this::clear, 0, 1, TimeUnit.MINUTES);
-    }
-
-    public CompletableFuture<Funko> getAsync(Long key, CompletableFuture<Funko> valueSupplier) {
-        long currentTime = System.currentTimeMillis();
-        lastAccessTime.set(currentTime);
-        CompletableFuture<Funko> cachedValue = cache.get(key);
-
-        if (cachedValue != null) {
-            return cachedValue;
-        } else {
-            CompletableFuture<Funko> futureValue = new CompletableFuture<>();
-            cache.put(key, futureValue);
-
-            valueSupplier.thenAccept(result -> {
-                futureValue.complete(result);
-                cleaner.schedule(() -> cache.remove(key), cacheExpirationMillis, TimeUnit.MILLISECONDS);
-            });
-
-            return futureValue;
-        }
+        //Programar la limpieza cada dos minutos
+        this.cleaner.scheduleAtFixedRate(this::clear, 2, 2, TimeUnit.MINUTES);
     }
 
     @Override
@@ -56,6 +43,11 @@ public class FunkoCacheImpl implements FunkoCache {
     @Override
     public Funko get(Long key) {
         logger.debug("Obteniendo funko de la cache con id:" + key);
+
+        if (cache.get(key) == null) {
+            System.out.println("No existe el funko con id en la cache:" + key);
+        }
+
         return cache.get(key).join();
     }
 
@@ -67,14 +59,17 @@ public class FunkoCacheImpl implements FunkoCache {
         } else {
             logger.debug("No se puede eliminar el funko de la cache con id:" + key + " porque la cache no tiene 10 elementos");
         }
-
     }
 
     @Override
     public void clear() {
-        long currentTime = System.currentTimeMillis();
         cache.entrySet().removeIf(entry -> {
-            boolean shouldRemove = currentTime - lastAccessTime.get() > cacheExpirationMillis;
+            boolean shouldRemove = false;
+            try {
+                shouldRemove = entry.getValue().get().getUpdatedAt().plusMinutes(2).isBefore(LocalDateTime.now());
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
             if (shouldRemove) {
                 logger.debug("Eliminando funko de la cache con id:" + entry.getKey());
             }
