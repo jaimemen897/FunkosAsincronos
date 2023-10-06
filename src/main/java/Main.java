@@ -17,7 +17,6 @@ public class Main {
         FunkosServiceImpl funkosService = FunkosServiceImpl.getInstance(funkoRepository);
 
 
-
         System.out.println("-------------------------- OBTENCION DE DATOS --------------------------");
         ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -41,7 +40,7 @@ public class Main {
         Future<List<Funko>> future8 = executorService.submit(funkoStitch);
 
 
-        /*try {
+        try {
             System.out.println("FUNKOS: " + future.get());
             System.out.println("FUNKO MAS CARO: " + future2.get());
             System.out.println("PRECIO MEDIO: " + future3.get());
@@ -52,15 +51,16 @@ public class Main {
             System.out.println("FUNKOS DE STITCH: " + future8.get());
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
-        }*/
+        }
 
-        System.out.println("-------------------------- FIN DE LA OBTENCION DE DATOS --------------------------");
+        System.out.println("-------------------------- INSERTAMOS FUNKOS --------------------------");
 
         for (Funko funko:funkoController.getFunkos()) {
-            funkoRepository.save(funko);
+            funkosService.save(funko);
         }
         System.out.println("FUNKOS GUARDADOS EN LA BASE DE DATOS");
-        funkoRepository.findAll().get().forEach(System.out::println);
+
+        funkosService.findAll().forEach(System.out::println);
 
         System.out.println(funkosService.findByNombre("Spiderman Delight"));
         executorService.shutdown();

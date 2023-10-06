@@ -51,7 +51,6 @@ public class FunkoController {
                     UUID cod = UUID.fromString(split[0].substring(0, 35));
 
                     funkos.add(Funko.builder()
-                            .id(UUID.randomUUID())
                             .cod(cod)
                             .id2(idGenerator.getAndIncrement())
                             .nombre(split[1])

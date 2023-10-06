@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @Builder
 public class Funko {
-    private final UUID id;
+
     private final UUID cod;
     private final Long id2;
     private final String nombre;
