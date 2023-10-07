@@ -19,43 +19,41 @@ Vamos a trabajar totalmente asíncrono.
   protegido para accesos concurrente en entornos multihilo.
 
 - [x] El formato de la tabla FUNKOS es el siguiente:
-  - [ x] ID: autonumérico y clave primaria. (mirar si se puede hacer con UUID en el sql)
-  - [ x] cod: UUID, no nulo, y se puede generar automáticamente un valor por defecto si no se le pasa. (mirar si se
-    puede hacer con UUID en el sql)
-  - [ x] MyId: Long que puede será generado por el IdGenerator (implementar este campo cuando tengamos hecha la clase
-    IdGenerator)
-  - [x] nombre: cadena de caracteres de máximo 255.
-  - [x] modelo, solo puede ser MARVEL, DISNEY, ANIME u OTROS
-  - [x] precio: un número real (real es decimal? si no?)
-  - [ x] fecha_lanzamiento: es un tipo de fecha. (mirar si vale con date)
-  - [x] created_at: marca de tiempo que toma por valor si no se le pasa la fecha completa actual al crearse la entidad
-  - [x] updated_at: marca de tiempo que toma por valor si no se le pasa la fecha completa al crearse la entidad o
-    actualizarse.
+    - [x] ID: autonumérico y clave primaria. (mirar si se puede hacer con UUID en el sql)
+    - [x] cod: UUID, no nulo, y se puede generar automáticamente un valor por defecto si no se le pasa. (mirar si se
+      puede hacer con UUID en el sql)
+    - [x] MyId: Long que puede será generado por el IdGenerator (implementar este campo cuando tengamos hecha la clase
+      IdGenerator)
+    - [x] nombre: cadena de caracteres de máximo 255.
+    - [x] modelo, solo puede ser MARVEL, DISNEY, ANIME u OTROS
+    - [x] precio: un número real (real es decimal? si no?)
+    - [x] fecha_lanzamiento: es un tipo de fecha. (mirar si vale con date)
+    - [x] created_at: marca de tiempo que toma por valor si no se le pasa la fecha completa actual al crearse la entidad
+    - [x] updated_at: marca de tiempo que toma por valor si no se le pasa la fecha completa al crearse la entidad o
+      actualizarse.
 
 - [x] Debes crear un repositorio CRUD totalmente asíncrono completo para la gestión de Funkos. Además, de las
   operaciones CRUD normales, debes incluir una que se llame findByNombre, donde se pueda buscar por nombres que
   contengan el patrón indicado.
   Se debe asegurar una instancia única de este repositorio.
 
-  
-- [ ] Además, debes usar un servicio totalmente asíncrono que haga uso de este repositorio e implemente una caché
+
+- [x] Además, debes usar un servicio totalmente asíncrono que haga uso de este repositorio e implemente una caché
   totalmente asíncrona de 10 elementos máximo que más han sido accedidos
-- [ ] Y expiren si llevan más de 2 minutos en la caché sin haber sido accedidos.
+- [x] Y expiren si llevan más de 2 minutos en la caché sin haber sido accedidos.
 - [ ] Este servicio hará uso de excepciones personalizadas de no chequeadas si no se puede realizar las
   operaciones indicadas.
-- [ ] Este servicio tendrá un método backup que exporta los datos en JSON a una ruta pasada de manera asíncrona, solo si
-  esta
-  es válida, si no producirá una excepción personalizada y un método import para importarlos de manera asíncrona desde
-  el CSV.
 
-- [ ] Para importar y exportar los datos, se recomienda hacer un servicio asíncrono de almacenamiento con los métodos de
-  
+- [ ] Este servicio tendrá un método backup que exporta los datos en JSON a una ruta pasada de manera asíncrona, solo si
+  esta es válida, si no producirá una excepción personalizada y un método import para importarlos de manera asíncrona
+  desde el CSV.
+
+- [x] Para importar y exportar los datos, se recomienda hacer un servicio asíncrono de almacenamiento con los métodos de
   importar y exportar los datos y excepciones personalizadas.
 
-Ten en cuenta que si aplicas en patrón Singleton, este tiene que estar protegido en entornos multihilo.
+- [x] Ten en cuenta que si aplicas en patrón Singleton, este tiene que estar protegido en entornos multihilo.
 
 Por lo tanto nuestra estructura es:
-
 
 - [x] DatabaseManager con los datos de la conexión leídos desde un fichero properties y un Pool de conexiones en
   HikaryCP con instancia única.
@@ -78,8 +76,6 @@ Se debe además sacar las consultas en el main de manera asíncrona:
 - [x] Funkos que han sido lanzados en 2023.
 - [x] Número de funkos de Stitch.
 - [x] Listado de funkos de Stitch.
-
-
 
 Finalmente se pide testear todos los caso correctos o incorrectos de los métodos de:
 

@@ -1,17 +1,18 @@
 package controllers;
 
 import enums.Modelo;
+import exceptions.NotFoundFile;
 import lombok.Getter;
 import models.Funko;
 import models.IdGenerator;
+import routes.Routes;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Getter
@@ -19,24 +20,23 @@ public class FunkoController {
     private static FunkoController instance;
     private final List<Funko> funkos = new ArrayList<>();
     private final IdGenerator idGenerator = IdGenerator.getInstance();
+    Routes routes = Routes.getInstance();
+    private final static Lock lock = new ReentrantLock();
 
     public static FunkoController getInstance() {
         if (instance == null) {
-            instance = new FunkoController();
+            lock.lock();
+            if (instance == null) {
+                instance = new FunkoController();
+            }
+            lock.unlock();
         }
         return instance;
     }
 
-
-    public FunkoController() {
-        if (instance == null) {
-            instance = this;
-        }
-    }
-
     public CompletableFuture<List<Funko>> loadCsv() {
         return CompletableFuture.supplyAsync(() -> {
-            try (BufferedReader br = new BufferedReader(new FileReader("src" + File.separator + "data" + File.separator + "funkos.csv"))) {
+            try (BufferedReader br = new BufferedReader(new FileReader(routes.getRutaFunkosCsv()))) {
                 String line = br.readLine();
                 line = br.readLine();
                 while (line != null) {
@@ -62,7 +62,7 @@ public class FunkoController {
                 }
 
             } catch (IOException e) {
-                System.out.println("Error al leer el archivo CSV: " + e.getMessage());
+                throw new NotFoundFile("No se ha encontrado el archivo, " + e.getMessage());
             }
             return funkos;
         });

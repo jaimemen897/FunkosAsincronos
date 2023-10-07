@@ -1,22 +1,36 @@
 package repositories.funkos;
 
+import adapters.LocalDateAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import enums.Modelo;
+import exceptions.ErrorInFile;
+import exceptions.NotFoundFile;
 import models.Funko;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DataBaseManager;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class FunkoRepositoryImpl implements FunkoRepository {
     private static FunkoRepositoryImpl instance;
     private final Logger logger = LoggerFactory.getLogger(FunkoRepositoryImpl.class);
     private final DataBaseManager db;
+    private static final Lock lock = new ReentrantLock();
 
     private FunkoRepositoryImpl(DataBaseManager db) {
         this.db = db;
@@ -24,7 +38,11 @@ public class FunkoRepositoryImpl implements FunkoRepository {
 
     public static FunkoRepositoryImpl getInstance(DataBaseManager db) {
         if (instance == null) {
-            instance = new FunkoRepositoryImpl(db);
+            lock.lock();
+            if (instance == null) {
+                instance = new FunkoRepositoryImpl(db);
+            }
+            lock.unlock();
         }
         return instance;
     }
@@ -46,7 +64,7 @@ public class FunkoRepositoryImpl implements FunkoRepository {
                 e.printStackTrace();
                 return null;
             }
-            System.out.println("Insertando funko: " + funko);
+            logger.debug("Insertando funko: " + funko);
             return funko;
         });
     }
@@ -175,6 +193,29 @@ public class FunkoRepositoryImpl implements FunkoRepository {
                 logger.error(e.getMessage());
             }
             return lista;
+        });
+    }
+
+    public CompletableFuture<Void> exportJson(String ruta) throws NotFoundFile, ErrorInFile {
+        return CompletableFuture.runAsync(() -> {
+            File file = new File(ruta);
+
+            try {
+                Files.deleteIfExists(Path.of(file.getPath()));
+            } catch (IOException e) {
+                throw new NotFoundFile("No se ha encontrado el archivo JSON, creando uno nuevo");
+            }
+
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(Funko.class, new LocalDateAdapter());
+            Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+            try (FileWriter writer = new FileWriter(ruta)) {
+                gson.toJson(findAll().get(), writer);
+            } catch (IOException | InterruptedException | ExecutionException e) {
+                throw new ErrorInFile("Error al escribir en el archivo JSON");
+            }
+
         });
     }
 }
