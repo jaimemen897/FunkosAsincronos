@@ -1,7 +1,7 @@
 package services.funkos;
 
-import exceptions.FunkoNotFoundException;
-import exceptions.FunkoNotStoragedException;
+import exceptions.Funko.FunkoNotFoundException;
+import exceptions.Funko.FunkoNotStoragedException;
 import models.Funko;
 
 import java.util.List;

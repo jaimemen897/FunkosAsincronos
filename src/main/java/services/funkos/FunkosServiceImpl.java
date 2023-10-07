@@ -1,13 +1,12 @@
 package services.funkos;
 
-import exceptions.FunkoNotFoundException;
-import exceptions.FunkoNotStoragedException;
+import exceptions.Funko.FunkoNotFoundException;
+import exceptions.Funko.FunkoNotStoragedException;
 import models.Funko;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import repositories.funkos.FunkoRepositoryImpl;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;

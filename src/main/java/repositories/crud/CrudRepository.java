@@ -1,6 +1,6 @@
 package repositories.crud;
 
-import exceptions.FunkoNotFoundException;
+import exceptions.Funko.FunkoNotFoundException;
 import models.Funko;
 
 import java.sql.SQLException;

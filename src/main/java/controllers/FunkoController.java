@@ -1,7 +1,7 @@
 package controllers;
 
 import enums.Modelo;
-import exceptions.NotFoundFile;
+import exceptions.File.NotFoundFile;
 import lombok.Getter;
 import models.Funko;
 import models.IdGenerator;
@@ -36,7 +36,7 @@ public class FunkoController {
 
     public CompletableFuture<List<Funko>> loadCsv() {
         return CompletableFuture.supplyAsync(() -> {
-            try (BufferedReader br = new BufferedReader(new FileReader(routes.getRutaFunkosCsv()))) {
+            try (BufferedReader br = new BufferedReader(new FileReader(routes.getRouteFunkosCsv()))) {
                 String line = br.readLine();
                 line = br.readLine();
                 while (line != null) {

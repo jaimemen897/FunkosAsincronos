@@ -4,9 +4,11 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import org.apache.ibatis.jdbc.ScriptRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import routes.Routes;
 
 import java.io.*;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -17,10 +19,12 @@ import java.util.concurrent.locks.ReentrantLock;
 @Getter
 public class DataBaseManager implements AutoCloseable {
     private static DataBaseManager instance;
-    private final String dir = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
+    private final Routes routes = Routes.getInstance();
+    private final Logger logger = LoggerFactory.getLogger(DataBaseManager.class);
 
     private HikariDataSource hikariDataSource;
     private static final Lock lock = new ReentrantLock();
+    private static boolean initDataBase = false;
 
     private DataBaseManager() {
         openConnection();
@@ -37,6 +41,7 @@ public class DataBaseManager implements AutoCloseable {
             lock.lock();
             if (instance == null) {
                 instance = new DataBaseManager();
+                initDataBase = true;
             }
             lock.unlock();
         }
@@ -58,14 +63,16 @@ public class DataBaseManager implements AutoCloseable {
 
             Connection connection = hikariDataSource.getConnection();
 
-            Reader reader = new BufferedReader(new FileReader(dir + properties.getProperty("db.init")));
-            ScriptRunner scriptRunner = new ScriptRunner(connection);
-            scriptRunner.runScript(reader);
+            if (initDataBase) {
+                Reader reader = new BufferedReader(new FileReader(routes.getRouteDirResources() + properties.getProperty("db.init")));
+                ScriptRunner scriptRunner = new ScriptRunner(connection);
+                scriptRunner.runScript(reader);
+            }
 
         } catch (SQLException e) {
-            System.out.println("Error al conectar con la base de datos: " + e.getMessage());
+            logger.error("Error al obtener la conexión: " + e.getMessage());
         } catch (IOException e) {
-            System.out.println("Error al cargar el archivo de propiedades: " + e.getMessage());
+            logger.error("Error al leer el fichero de propiedades: " + e.getMessage());
         }
     }
 
@@ -80,9 +87,9 @@ public class DataBaseManager implements AutoCloseable {
         try {
             return hikariDataSource.getConnection();
         } catch (SQLException e) {
-            System.out.println("Error al obtener la conexión: " + e.getMessage());
+            logger.error("Error al obtener la conexión: " + e.getMessage());
             return null;
         }
     }
 
-    }
+}

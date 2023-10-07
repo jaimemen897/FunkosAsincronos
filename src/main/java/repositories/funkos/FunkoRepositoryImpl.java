@@ -4,9 +4,9 @@ import adapters.LocalDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import enums.Modelo;
-import exceptions.ErrorInFile;
-import exceptions.GetDataFromBD;
-import exceptions.InsertDataToBd;
+import exceptions.File.ErrorInFile;
+import exceptions.BD.GetDataFromBD;
+import exceptions.BD.InsertDataToBd;
 import models.Funko;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +70,7 @@ public class FunkoRepositoryImpl implements FunkoRepository {
     @Override
     public CompletableFuture<Funko> update(Funko funko) {
         return CompletableFuture.supplyAsync(() -> {
-            String query = "UPDATE FUNKOS SET nombre = ?, modelo = ?, precio = ?, fechaLanzamiento = ? WHERE id = ?";
+            String query = "UPDATE FUNKOS SET nombre = ?, modelo = ?, precio = ?, fechaLanzamiento = ? WHERE id2 = ?";
             try (var connection = db.getConnection();
                  var stmt = connection.prepareStatement(query)) {
                 stmt.setString(1, funko.getNombre());
@@ -91,7 +91,7 @@ public class FunkoRepositoryImpl implements FunkoRepository {
     public CompletableFuture<Optional<Funko>> findById(Long id) {
         return CompletableFuture.supplyAsync(() -> {
             Optional<Funko> optionalFunko = Optional.empty();
-            String query = "SELECT * FROM FUNKOS WHERE id = ?";
+            String query = "SELECT * FROM FUNKOS WHERE id2 = ?";
             try (var connection = db.getConnection();
                  var stmt = connection.prepareStatement(query)) {
                 stmt.setLong(1, id);
@@ -144,7 +144,7 @@ public class FunkoRepositoryImpl implements FunkoRepository {
     @Override
     public CompletableFuture<Boolean> deleteById(Long idDelete) {
         return CompletableFuture.supplyAsync(() -> {
-            String query = "DELETE FROM FUNKOS WHERE id = ?";
+            String query = "DELETE FROM FUNKOS WHERE id2 = ?";
             try (var connection = db.getConnection();
                  var stmt = connection.prepareStatement(query)) {
                 stmt.setLong(1, idDelete);

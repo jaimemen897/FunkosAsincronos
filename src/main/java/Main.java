@@ -1,7 +1,8 @@
 import controllers.FunkoController;
 import enums.Modelo;
-import exceptions.ErrorInFile;
-import exceptions.NotFoundFile;
+import exceptions.File.ErrorInFile;
+import exceptions.File.NotFoundFile;
+import exceptions.Funko.FunkoNotStoragedException;
 import models.Funko;
 import repositories.funkos.FunkoRepositoryImpl;
 import routes.Routes;
@@ -14,7 +15,7 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 public class Main {
-    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException, NotFoundFile, ErrorInFile {
+    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException, NotFoundFile, ErrorInFile, FunkoNotStoragedException {
         FunkoController funkoController = FunkoController.getInstance();
         FunkoRepositoryImpl funkoRepository = FunkoRepositoryImpl.getInstance(DataBaseManager.getInstance());
         FunkosServiceImpl funkosService = FunkosServiceImpl.getInstance(funkoRepository);
@@ -68,7 +69,7 @@ public class Main {
         funkosService.findAll().forEach(System.out::println);
 
         System.out.println("-------------------------- EXPORTAMOS FUNKOS A JSON --------------------------");
-        CompletableFuture<Void> future9 = funkoRepository.exportJson(routes.getRutaFunkosJson());
+        CompletableFuture<Void> future9 = funkoRepository.exportJson(routes.getRouteFunkosJson());
         future9.get();
 
 
