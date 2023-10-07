@@ -1,7 +1,10 @@
 import controllers.FunkoController;
 import enums.Modelo;
+import exceptions.ErrorInFile;
+import exceptions.NotFoundFile;
 import models.Funko;
 import repositories.funkos.FunkoRepositoryImpl;
+import routes.Routes;
 import services.database.DataBaseManager;
 import services.funkos.FunkosServiceImpl;
 
@@ -11,10 +14,11 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 public class Main {
-    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException {
+    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException, NotFoundFile, ErrorInFile {
         FunkoController funkoController = FunkoController.getInstance();
         FunkoRepositoryImpl funkoRepository = FunkoRepositoryImpl.getInstance(DataBaseManager.getInstance());
         FunkosServiceImpl funkosService = FunkosServiceImpl.getInstance(funkoRepository);
+        Routes routes = Routes.getInstance();
 
 
         System.out.println("-------------------------- OBTENCION DE DATOS --------------------------");
@@ -53,17 +57,24 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
         }
 
-        System.out.println("-------------------------- INSERTAMOS FUNKOS --------------------------");
 
-        for (Funko funko:funkoController.getFunkos()) {
+        System.out.println("-------------------------- INSERTAMOS FUNKOS --------------------------");
+        for (Funko funko : funkoController.getFunkos()) {
             funkosService.save(funko);
         }
-        System.out.println("FUNKOS GUARDADOS EN LA BASE DE DATOS");
 
+
+        System.out.println("-------------------------- MOSTRAMOS FUNKOS DE LA BASE DE DATOS --------------------------");
         funkosService.findAll().forEach(System.out::println);
-
         System.out.println(funkosService.findByNombre("Spiderman Delight"));
-        executorService.shutdown();
 
+        System.out.println(funkosService.findById(90));
+
+        CompletableFuture<Void> future9 = funkoRepository.exportJson(routes.getRutaFunkosJson());
+        future9.join();
+        funkoRepository.exportJson(routes.getRutaFunkosJson());
+
+        executorService.shutdown();
+        funkosService.close();
     }
 }
