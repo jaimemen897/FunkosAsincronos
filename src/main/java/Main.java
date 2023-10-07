@@ -66,13 +66,11 @@ public class Main {
 
         System.out.println("-------------------------- MOSTRAMOS FUNKOS DE LA BASE DE DATOS --------------------------");
         funkosService.findAll().forEach(System.out::println);
-        System.out.println(funkosService.findByNombre("Spiderman Delight"));
 
-        System.out.println(funkosService.findById(90));
-
+        System.out.println("-------------------------- EXPORTAMOS FUNKOS A JSON --------------------------");
         CompletableFuture<Void> future9 = funkoRepository.exportJson(routes.getRutaFunkosJson());
-        future9.join();
-        funkoRepository.exportJson(routes.getRutaFunkosJson());
+        future9.get();
+
 
         executorService.shutdown();
         funkosService.close();

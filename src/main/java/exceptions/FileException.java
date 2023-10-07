@@ -1,6 +1,6 @@
 package exceptions;
 
-public class FileException extends RuntimeException{
+public abstract class FileException extends RuntimeException{
     public FileException(String message) {
         super(message);
     }

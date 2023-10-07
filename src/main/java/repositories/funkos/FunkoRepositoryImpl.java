@@ -5,17 +5,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import enums.Modelo;
 import exceptions.ErrorInFile;
-import exceptions.NotFoundFile;
+import exceptions.GetDataFromBD;
+import exceptions.InsertDataToBd;
 import models.Funko;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.database.DataBaseManager;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +59,8 @@ public class FunkoRepositoryImpl implements FunkoRepository {
                 stmt.setObject(6, funko.getFechaLanzamiento());
                 stmt.executeUpdate();
             } catch (SQLException e) {
-                e.printStackTrace();
-                return null;
+                logger.error(e.getMessage());
+                throw new InsertDataToBd("Error al insertar: " + e.getMessage());
             }
             logger.debug("Insertando funko: " + funko);
             return funko;
@@ -83,6 +81,7 @@ public class FunkoRepositoryImpl implements FunkoRepository {
                 stmt.executeUpdate();
             } catch (SQLException e) {
                 logger.error(e.getMessage());
+                throw new InsertDataToBd("Error al actualizar: " + e.getMessage());
             }
             return funko;
         });
@@ -99,7 +98,6 @@ public class FunkoRepositoryImpl implements FunkoRepository {
                 var rs = stmt.executeQuery();
                 if (rs.next()) {
                     optionalFunko = Optional.of(Funko.builder()
-
                             .cod(UUID.fromString(rs.getString("cod")))
                             .id2(rs.getLong("id2"))
                             .nombre(rs.getString("nombre"))
@@ -110,6 +108,7 @@ public class FunkoRepositoryImpl implements FunkoRepository {
                 }
             } catch (SQLException e) {
                 logger.error(e.getMessage());
+                throw new GetDataFromBD("Error al encontrar por ID: " + e.getMessage());
             }
             return optionalFunko;
         });
@@ -136,6 +135,7 @@ public class FunkoRepositoryImpl implements FunkoRepository {
                 }
             } catch (SQLException e) {
                 logger.error(e.getMessage());
+                throw new GetDataFromBD("Error al encontrar todos: " + e.getMessage());
             }
             return lista;
         });
@@ -151,6 +151,7 @@ public class FunkoRepositoryImpl implements FunkoRepository {
                 stmt.executeUpdate();
             } catch (SQLException e) {
                 logger.error(e.getMessage());
+                throw new InsertDataToBd("Error al eliminar por ID: " + e.getMessage());
             }
             return true;
         });
@@ -165,6 +166,7 @@ public class FunkoRepositoryImpl implements FunkoRepository {
                 stmt.executeUpdate();
             } catch (SQLException e) {
                 logger.error(e.getMessage());
+                throw new InsertDataToBd("Error al eliminar todos: " + e.getMessage());
             }
         });
     }
@@ -180,7 +182,6 @@ public class FunkoRepositoryImpl implements FunkoRepository {
                 var rs = stmt.executeQuery();
                 while (rs.next()) {
                     lista.add(Funko.builder()
-
                             .cod(UUID.fromString(rs.getString("cod")))
                             .id2(rs.getLong("id2"))
                             .nombre(rs.getString("nombre"))
@@ -191,21 +192,14 @@ public class FunkoRepositoryImpl implements FunkoRepository {
                 }
             } catch (SQLException e) {
                 logger.error(e.getMessage());
+                throw new GetDataFromBD("Error al encontrar por nombre: " + e.getMessage());
             }
             return lista;
         });
     }
 
-    public CompletableFuture<Void> exportJson(String ruta) throws NotFoundFile, ErrorInFile {
+    public CompletableFuture<Void> exportJson(String ruta) {
         return CompletableFuture.runAsync(() -> {
-            File file = new File(ruta);
-
-            try {
-                Files.deleteIfExists(Path.of(file.getPath()));
-            } catch (IOException e) {
-                throw new NotFoundFile("No se ha encontrado el archivo JSON, creando uno nuevo");
-            }
-
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(Funko.class, new LocalDateAdapter());
             Gson gson = gsonBuilder.setPrettyPrinting().create();
@@ -213,9 +207,8 @@ public class FunkoRepositoryImpl implements FunkoRepository {
             try (FileWriter writer = new FileWriter(ruta)) {
                 gson.toJson(findAll().get(), writer);
             } catch (IOException | InterruptedException | ExecutionException e) {
-                throw new ErrorInFile("Error al escribir en el archivo JSON");
+                throw new ErrorInFile("Error al escribir en el archivo JSON: " + e.getMessage());
             }
-
         });
     }
 }

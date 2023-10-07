@@ -9,6 +9,7 @@ public class Routes {
     private static Routes instance;
     private final String rutaFunkosCsv = "src" + File.separator + "data" + File.separator + "funkos.csv";
     private final String rutaFunkosJson = "src" + File.separator + "data" + File.separator + "funkos.json";
+    private final String routeDirResources = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
 
     public static Routes getInstance() {
         if (instance == null) {

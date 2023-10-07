@@ -17,8 +17,8 @@ import java.util.concurrent.locks.ReentrantLock;
 @Getter
 public class DataBaseManager implements AutoCloseable {
     private static DataBaseManager instance;
-    private final String dir = Paths.get("").toAbsolutePath() + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator;
-    private final String propertiesPath = Paths.get("").toAbsolutePath() + File.separator + "resources" + File.separator + "database.properties";
+    private final String dir = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
+
     private HikariDataSource hikariDataSource;
     private static final Lock lock = new ReentrantLock();
 
