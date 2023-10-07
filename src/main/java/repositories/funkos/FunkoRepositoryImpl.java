@@ -7,6 +7,7 @@ import enums.Modelo;
 import exceptions.File.ErrorInFile;
 import exceptions.BD.GetDataFromBD;
 import exceptions.BD.InsertDataToBd;
+import exceptions.Funko.FunkoNotFoundException;
 import models.Funko;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -37,9 +39,7 @@ public class FunkoRepositoryImpl implements FunkoRepository {
     public static FunkoRepositoryImpl getInstance(DataBaseManager db) {
         if (instance == null) {
             lock.lock();
-            if (instance == null) {
-                instance = new FunkoRepositoryImpl(db);
-            }
+            instance = new FunkoRepositoryImpl(db);
             lock.unlock();
         }
         return instance;
@@ -78,10 +78,16 @@ public class FunkoRepositoryImpl implements FunkoRepository {
                 stmt.setDouble(3, funko.getPrecio());
                 stmt.setDate(4, java.sql.Date.valueOf(funko.getFechaLanzamiento()));
                 stmt.setLong(5, funko.getId2());
-                stmt.executeUpdate();
-            } catch (SQLException e) {
+                var res = stmt.executeUpdate();
+                if (res > 0) {
+                    logger.debug("Funko actualizado");
+                } else {
+                    logger.error("No se ha podido guardar el funko");
+                    throw new FunkoNotFoundException("No se ha podido guardar el funko");
+                }
+            } catch (SQLException | FunkoNotFoundException e) {
                 logger.error(e.getMessage());
-                throw new InsertDataToBd("Error al actualizar: " + e.getMessage());
+                throw new CompletionException(e);
             }
             return funko;
         });
@@ -124,7 +130,6 @@ public class FunkoRepositoryImpl implements FunkoRepository {
                 var rs = stmt.executeQuery();
                 while (rs.next()) {
                     lista.add(Funko.builder()
-
                             .cod(UUID.fromString(rs.getString("cod")))
                             .id2(rs.getLong("id2"))
                             .nombre(rs.getString("nombre"))
@@ -142,7 +147,12 @@ public class FunkoRepositoryImpl implements FunkoRepository {
     }
 
     @Override
-    public CompletableFuture<Boolean> deleteById(Long idDelete) {
+    public CompletableFuture<Boolean> deleteById(Long idDelete) throws FunkoNotFoundException, ExecutionException, InterruptedException {
+        Optional<Funko> funko = findById(idDelete).get();
+        System.out.println(funko);
+        if (funko.isPresent()) {
+            throw new FunkoNotFoundException("No se ha encontrado ningún funko con el id: " + idDelete);
+        }
         return CompletableFuture.supplyAsync(() -> {
             String query = "DELETE FROM FUNKOS WHERE id2 = ?";
             try (var connection = db.getConnection();
@@ -155,6 +165,7 @@ public class FunkoRepositoryImpl implements FunkoRepository {
             }
             return true;
         });
+
     }
 
     @Override

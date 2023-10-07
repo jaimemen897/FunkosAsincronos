@@ -26,9 +26,7 @@ public class FunkoController {
     public static FunkoController getInstance() {
         if (instance == null) {
             lock.lock();
-            if (instance == null) {
-                instance = new FunkoController();
-            }
+            instance = new FunkoController();
             lock.unlock();
         }
         return instance;

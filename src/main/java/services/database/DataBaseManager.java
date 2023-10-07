@@ -32,23 +32,21 @@ public class DataBaseManager implements AutoCloseable {
 
 
     public static synchronized DataBaseManager getInstance() {
-        try {
-            Class.forName("org.h2.Driver");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Error al cargar el driver: " + e.getMessage());
-        }
         if (instance == null) {
             lock.lock();
-            if (instance == null) {
-                instance = new DataBaseManager();
-                initDataBase = true;
-            }
+            initDataBase = true;
+            instance = new DataBaseManager();
             lock.unlock();
         }
         return instance;
     }
 
     private synchronized void openConnection() {
+        try {
+            Class.forName("org.h2.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Error al cargar el driver: " + e.getMessage());
+        }
         try {
             InputStream dbProps = ClassLoader.getSystemResourceAsStream("database.properties");
             Properties properties = new Properties();

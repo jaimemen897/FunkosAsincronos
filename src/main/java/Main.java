@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 public class Main {
-    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException, NotFoundFile, ErrorInFile, FunkoNotStoragedException {
+    public static void main(String[] args) throws ExecutionException, InterruptedException, NotFoundFile, ErrorInFile, FunkoNotStoragedException {
         FunkoController funkoController = FunkoController.getInstance();
         FunkoRepositoryImpl funkoRepository = FunkoRepositoryImpl.getInstance(DataBaseManager.getInstance());
         FunkosServiceImpl funkosService = FunkosServiceImpl.getInstance(funkoRepository);

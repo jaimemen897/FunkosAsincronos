@@ -17,9 +17,9 @@ public interface FunkosService {
 
     Funko save(Funko alumno) throws ExecutionException, InterruptedException, FunkoNotStoragedException;
 
-    Funko update(Funko alumno) throws ExecutionException, InterruptedException, FunkoNotStoragedException;
+    Funko update(Funko alumno) throws ExecutionException, InterruptedException, FunkoNotStoragedException, FunkoNotFoundException;
 
-    boolean deleteById(long id) throws ExecutionException, InterruptedException;
+    boolean deleteById(long id) throws ExecutionException, InterruptedException, FunkoNotFoundException;
 
     void deleteAll() throws ExecutionException, InterruptedException;
 }

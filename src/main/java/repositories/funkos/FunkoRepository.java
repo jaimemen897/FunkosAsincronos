@@ -1,5 +1,6 @@
 package repositories.funkos;
 
+import exceptions.Funko.FunkoNotFoundException;
 import models.Funko;
 import repositories.crud.CrudRepository;
 
@@ -7,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public interface FunkoRepository extends CrudRepository<Funko, Long> {
     // Buscar por nombre
@@ -16,7 +18,7 @@ public interface FunkoRepository extends CrudRepository<Funko, Long> {
     CompletableFuture<Funko> update(Funko funko) throws SQLException;
 
     // Borrar por ID
-    CompletableFuture<Boolean> deleteById(Long id) throws SQLException;
+    CompletableFuture<Boolean> deleteById(Long id) throws SQLException, FunkoNotFoundException, ExecutionException, InterruptedException;
 
     // Borrar todos
     CompletableFuture<Void> deleteAll() throws SQLException;

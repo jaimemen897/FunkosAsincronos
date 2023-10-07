@@ -1,6 +1,7 @@
 package repositories.funkos;
 
 import enums.Modelo;
+import exceptions.Funko.FunkoNotFoundException;
 import models.Funko;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -148,7 +149,6 @@ class FunkoRepositoryTest {
         funkoRepository.save(funko1).get();
         funkoRepository.save(funko2).get();
         List<Funko> foundFunkos = funkoRepository.findByNombre("Rayo McQueen").get();
-        System.out.println(foundFunkos);
         assertAll(
                 () -> assertEquals(1, foundFunkos.size()),
                 () -> assertEquals(funko1.getModelo(), foundFunkos.get(0).getModelo()),
@@ -161,7 +161,7 @@ class FunkoRepositoryTest {
     }
 
     @Test
-    void deleteById() throws SQLException, ExecutionException, InterruptedException {
+    void deleteById() throws SQLException, ExecutionException, InterruptedException, FunkoNotFoundException {
         Funko funko1 = Funko.builder()
                 .cod(UUID.randomUUID())
                 .id2(95L)

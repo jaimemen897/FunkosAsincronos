@@ -29,9 +29,7 @@ public class FunkosServiceImpl implements FunkosService {
     public static FunkosServiceImpl getInstance(FunkoRepositoryImpl funkoRepository) {
         if (instance == null) {
             lock.lock();
-            if (instance == null) {
-                instance = new FunkosServiceImpl(funkoRepository);
-            }
+            instance = new FunkosServiceImpl(funkoRepository);
             lock.unlock();
         }
         return instance;
@@ -80,18 +78,18 @@ public class FunkosServiceImpl implements FunkosService {
     }
 
     @Override
-    public Funko update(Funko funko) throws ExecutionException, InterruptedException, FunkoNotStoragedException {
+    public Funko update(Funko funko) throws ExecutionException, InterruptedException, FunkoNotFoundException {
         logger.debug("Actualizando funko con id: " + funko.getId2());
         funko = funkoRepository.update(funko).get();
         if (funko == null) {
-            throw new FunkoNotStoragedException("No se ha podido guardar el funko");
+            throw new FunkoNotFoundException("No se ha podido guardar el funko");
         }
         cache.put(funko.getId2(), funko);
         return funko;
     }
 
     @Override
-    public boolean deleteById(long id) throws ExecutionException, InterruptedException {
+    public boolean deleteById(long id) throws ExecutionException, InterruptedException, FunkoNotFoundException {
         logger.debug("Eliminando: " + id);
         var deleted = funkoRepository.deleteById(id).get();
         if (deleted) {

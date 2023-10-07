@@ -16,11 +16,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class FunkoCacheImpl implements FunkoCache {
     private final Logger logger = LoggerFactory.getLogger(FunkoCacheImpl.class);
     private final int maxSize = 10;
-
     private final Map<Long, Funko> cache;
     Lock lock = new ReentrantLock();
-
-
     private final ScheduledExecutorService cleaner;
 
 
@@ -55,7 +52,7 @@ public class FunkoCacheImpl implements FunkoCache {
         try {
             logger.debug("Obteniendo funko de la cache con id:" + key);
             if (cache.get(key) == null) {
-                System.out.println("No existe el funko con id en la cache:" + key);
+                logger.error("No se ha encontrado el funko con id:" + key);
             }
             return cache.get(key);
         } finally {
