@@ -150,8 +150,8 @@ public class FunkoRepositoryImpl implements FunkoRepository {
     public CompletableFuture<Boolean> deleteById(Long idDelete) throws FunkoNotFoundException, ExecutionException, InterruptedException {
         Optional<Funko> funko = findById(idDelete).get();
         System.out.println(funko);
-        if (funko.isPresent()) {
-            throw new FunkoNotFoundException("No se ha encontrado ningún funko con el id: " + idDelete);
+        if (funko.isEmpty()) {
+            throw new FunkoNotFoundException("No se ha encontrado ningun funko con el id: " + idDelete);
         }
         return CompletableFuture.supplyAsync(() -> {
             String query = "DELETE FROM FUNKOS WHERE id2 = ?";
