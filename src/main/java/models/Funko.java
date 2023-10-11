@@ -17,9 +17,9 @@ public class Funko {
 
     private final UUID cod;
     private final Long id2;
-    private final String nombre;
-    private final Modelo modelo;
-    private final double precio;
+    private String nombre;
+    private Modelo modelo;
+    private double precio;
     private final LocalDate fechaLanzamiento;
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();

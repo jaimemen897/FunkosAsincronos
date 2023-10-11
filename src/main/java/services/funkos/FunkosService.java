@@ -1,25 +1,25 @@
 package services.funkos;
 
-import exceptions.FunkoNotFoundException;
+import exceptions.Funko.FunkoNotFoundException;
+import exceptions.Funko.FunkoNotStoragedException;
 import models.Funko;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 public interface FunkosService {
-    List<Funko> findAll() throws SQLException, ExecutionException, InterruptedException;
+    List<Funko> findAll() throws ExecutionException, InterruptedException;
 
-    List<Funko> findByNombre(String nombre) throws SQLException, ExecutionException, InterruptedException;
+    List<Funko> findByNombre(String nombre) throws ExecutionException, InterruptedException, FunkoNotFoundException;
 
-    Optional<Funko> findById(long id) throws SQLException, ExecutionException, InterruptedException;
+    Optional<Funko> findById(long id) throws ExecutionException, InterruptedException, FunkoNotFoundException;
 
-    Funko save(Funko alumno) throws SQLException, ExecutionException, InterruptedException;
+    Funko save(Funko alumno) throws ExecutionException, InterruptedException, FunkoNotStoragedException;
 
-    Funko update(Funko alumno) throws SQLException, FunkoNotFoundException, ExecutionException, InterruptedException;
+    Funko update(Funko alumno) throws ExecutionException, InterruptedException, FunkoNotStoragedException, FunkoNotFoundException;
 
-    boolean deleteById(long id) throws SQLException, ExecutionException, InterruptedException;
+    boolean deleteById(long id) throws ExecutionException, InterruptedException, FunkoNotFoundException;
 
-    void deleteAll() throws SQLException, ExecutionException, InterruptedException;
+    void deleteAll() throws ExecutionException, InterruptedException;
 }

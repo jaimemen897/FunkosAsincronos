@@ -1,12 +1,13 @@
 package repositories.crud;
 
-import exceptions.FunkoNotFoundException;
+import exceptions.Funko.FunkoNotFoundException;
 import models.Funko;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public interface CrudRepository<T, ID> {
     // Guardar
@@ -25,7 +26,7 @@ public interface CrudRepository<T, ID> {
     CompletableFuture<List<Funko>> findAll() throws SQLException;
 
     // Borrar por ID
-    CompletableFuture<Boolean> deleteById(ID id) throws SQLException;
+    CompletableFuture<Boolean> deleteById(ID id) throws SQLException, FunkoNotFoundException, ExecutionException, InterruptedException;
 
     // Borrar todos
     CompletableFuture<Void> deleteAll() throws SQLException;
