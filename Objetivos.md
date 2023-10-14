@@ -79,10 +79,10 @@ Se debe además sacar las consultas en el main de manera asíncrona:
 
 Finalmente se pide testear todos los caso correctos o incorrectos de los métodos de:
 
-- [ ] Caché
-- [ ] Repositorio
-- [ ] Servicio de Almacenamiento
-- [ ] Servicio de Funkos.
+- [x] Caché
+- [x] Repositorio
+- [x] Servicio de Almacenamiento
+- [x] Servicio de Funkos.
 
 - [ ] Se recomienda usar un Logger en todo el proceso.
 
