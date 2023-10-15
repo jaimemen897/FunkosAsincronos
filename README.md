@@ -46,7 +46,7 @@ Aquí tenemos la clase `DataBaseManager`que, además de usar el patrón Singleto
 La clase implementa la interfaz `AutoCloseable`, lo que significa que se puede utilizar en un  bloque `try-with-resources` para asegurarse de que la conexión se cierre adecuadamente cuando ya no se necesite.
 
 ### Funkos
-En este paquete contamos con dos interfaces, `FunkoCache`que extiende de `Cache`, y `FunkoServiceImpl` que implementa la interfaz `FunkosService`. Cuentan con los siguientes métodos de operaciones básicas de consulta:
+En este paquete contamos con dos interfaces, `FunkoCache`que extiende de `Cache`, y `FunkoServiceImpl` que implementa la interfaz `FunkosService`. La clase `FunkoServiceImpl` cuentan con los siguientes métodos de operaciones básicas de consulta:
 -   `getInstance(FunkoRepositoryImpl funkoRepository)`: Un método estático que permite obtener una única instancia de `FunkosServiceImpl` de manera segura utilizando bloqueo.
 -   `findAll()`: Recupera todos los Funkos almacenados en el repositorio.
 -   `findByNombre(String nombre)`: Busca Funkos por su nombre y lanza una excepción si no se encuentra ninguno.
@@ -56,6 +56,8 @@ En este paquete contamos con dos interfaces, `FunkoCache`que extiende de `Cache`
 -   `deleteById(long id)`: Elimina un Funko por su ID y lo elimina de la caché si se encuentra.
 -   `deleteAll()`: Elimina todos los Funkos en el repositorio y limpia la caché.
 -   `close()`: Cierra la caché.
+-   `exportToJson(String ruta)`: Llama al método exportToJson de FunkosRepository que exporta la lista de Funkos como JSON a la ruta que se le pasa por parámetro.
+  -  `importFromCsv(String ruta)`: Llama al método loadCsv de FunkoController que lee el CSV y lo guarda en la base de datos con el método save.
 
 También nos encontramos con dos clases, la primera sería `FunkoCacheImpl`que implementa a `FunkoCache`. En esta clase definimos el tamaño máximo de la cache en `maxSize`, que se establece en 10, utilizamos un LinkedHashMap, para garantizar el orden de acceso, de esta forma cuando se alcance el tamaño máximo de la caché, se eliminan los objetos menos utilizados según el orden de acceso.  
 Utilizamos un `lock` para asegurar que las operaciones en la caché se realicen de manera segura en entornos multi-hilo y un `ScheduledExecutorService` al que llamamos`cleaner` para programar la limpieza automática de la caché cada dos minutos. Esto se realiza de la siguiente forma:

@@ -44,7 +44,6 @@ public class Main {
         Future<Double> future7 = executorService.submit(numberStitch);
         Future<List<Funko>> future8 = executorService.submit(funkoStitch);
 
-
         try {
             System.out.println("FUNKOS: " + future.get());
             System.out.println("FUNKO MAS CARO: " + future2.get());
@@ -58,20 +57,16 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
         }
 
-
         System.out.println("-------------------------- INSERTAMOS FUNKOS --------------------------");
         for (Funko funko : funkoController.getFunkos()) {
             funkosService.save(funko);
         }
 
-
         System.out.println("-------------------------- MOSTRAMOS FUNKOS DE LA BASE DE DATOS --------------------------");
         funkosService.findAll().forEach(System.out::println);
 
         System.out.println("-------------------------- EXPORTAMOS FUNKOS A JSON --------------------------");
-        CompletableFuture<Void> future9 = funkoRepository.exportJson(routes.getRouteFunkosJson());
-        future9.get();
-
+        funkosService.exportToJson(routes.getRouteFunkosJson());
 
         executorService.shutdown();
         funkosService.close();

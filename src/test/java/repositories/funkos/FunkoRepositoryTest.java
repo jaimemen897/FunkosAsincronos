@@ -6,9 +6,10 @@ import models.Funko;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import routes.Routes;
 import services.database.DataBaseManager;
 
-import java.sql.SQLException;
+import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -19,29 +20,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FunkoRepositoryTest {
 
-    private FunkoRepository funkoRepository;
+    private FunkoRepositoryImpl funkoRepository;
 
     @BeforeEach
-    void setUp() throws SQLException {
+    void setUp() {
         funkoRepository = FunkoRepositoryImpl.getInstance(DataBaseManager.getInstance());
         funkoRepository.deleteAll();
     }
 
     @AfterEach
-    void tearDown() throws SQLException {
+    void tearDown() {
         funkoRepository.deleteAll();
     }
 
     @Test
-    void save() throws SQLException, ExecutionException, InterruptedException {
-        Funko funko = Funko.builder()
-                .cod(UUID.randomUUID())
-                .id2(95L)
-                .nombre("Rayo McQueen")
-                .modelo(Modelo.DISNEY)
-                .precio(100.0)
-                .fechaLanzamiento(LocalDate.parse("2021-10-07"))
-                .build();
+    void save() throws ExecutionException, InterruptedException {
+        Funko funko = Funko.builder().cod(UUID.randomUUID()).id2(95L).nombre("Rayo McQueen").modelo(Modelo.DISNEY).precio(100.0).fechaLanzamiento(LocalDate.parse("2021-10-07")).build();
         Funko savedFunko = funkoRepository.save(funko).get();
         assertAll(
                 () -> assertNotNull(savedFunko),
@@ -55,15 +49,8 @@ class FunkoRepositoryTest {
     }
 
     @Test
-    void update() throws SQLException, ExecutionException, InterruptedException {
-        Funko funko = Funko.builder()
-                .cod(UUID.randomUUID())
-                .id2(95L)
-                .nombre("Rayo McQueen")
-                .modelo(Modelo.DISNEY)
-                .precio(100.0)
-                .fechaLanzamiento(LocalDate.parse("2021-10-07"))
-                .build();
+    void update() throws ExecutionException, InterruptedException {
+        Funko funko = Funko.builder().cod(UUID.randomUUID()).id2(95L).nombre("Rayo McQueen").modelo(Modelo.DISNEY).precio(100.0).fechaLanzamiento(LocalDate.parse("2021-10-07")).build();
         Funko savedFunko = funkoRepository.save(funko).get();
         savedFunko.setNombre("Rayo McQueen 2");
         savedFunko.setPrecio(200.0);
@@ -81,15 +68,8 @@ class FunkoRepositoryTest {
     }
 
     @Test
-    void findById() throws SQLException, ExecutionException, InterruptedException {
-        Funko funko = Funko.builder()
-                .cod(UUID.randomUUID())
-                .id2(95L)
-                .nombre("Rayo McQueen")
-                .modelo(Modelo.DISNEY)
-                .precio(100.0)
-                .fechaLanzamiento(LocalDate.parse("2021-10-07"))
-                .build();
+    void findById() throws ExecutionException, InterruptedException {
+        Funko funko = Funko.builder().cod(UUID.randomUUID()).id2(95L).nombre("Rayo McQueen").modelo(Modelo.DISNEY).precio(100.0).fechaLanzamiento(LocalDate.parse("2021-10-07")).build();
         Funko savedFunko = funkoRepository.save(funko).get();
         Optional<Funko> foundFunko = funkoRepository.findById(savedFunko.getId2()).get();
         assertAll(
@@ -105,23 +85,9 @@ class FunkoRepositoryTest {
     }
 
     @Test
-    void findAll() throws SQLException, ExecutionException, InterruptedException {
-        Funko funko1 = Funko.builder()
-                .cod(UUID.randomUUID())
-                .id2(95L)
-                .nombre("Rayo McQueen")
-                .modelo(Modelo.DISNEY)
-                .precio(100.0)
-                .fechaLanzamiento(LocalDate.parse("2021-10-07"))
-                .build();
-        Funko funko2 = Funko.builder()
-                .cod(UUID.randomUUID())
-                .id2(96L)
-                .nombre("Mate")
-                .modelo(Modelo.DISNEY)
-                .precio(200.0)
-                .fechaLanzamiento(LocalDate.parse("2021-10-07"))
-                .build();
+    void findAll() throws ExecutionException, InterruptedException {
+        Funko funko1 = Funko.builder().cod(UUID.randomUUID()).id2(95L).nombre("Rayo McQueen").modelo(Modelo.DISNEY).precio(100.0).fechaLanzamiento(LocalDate.parse("2021-10-07")).build();
+        Funko funko2 = Funko.builder().cod(UUID.randomUUID()).id2(96L).nombre("Mate").modelo(Modelo.DISNEY).precio(200.0).fechaLanzamiento(LocalDate.parse("2021-10-07")).build();
         funkoRepository.save(funko1).get();
         funkoRepository.save(funko2).get();
         List<Funko> foundFunkos = funkoRepository.findAll().get();
@@ -129,23 +95,9 @@ class FunkoRepositoryTest {
     }
 
     @Test
-    void findByNombre() throws SQLException, ExecutionException, InterruptedException {
-        Funko funko1 = Funko.builder()
-                .cod(UUID.randomUUID())
-                .id2(95L)
-                .nombre("Rayo McQueen")
-                .modelo(Modelo.DISNEY)
-                .precio(100.0)
-                .fechaLanzamiento(LocalDate.parse("2021-10-07"))
-                .build();
-        Funko funko2 = Funko.builder()
-                .cod(UUID.randomUUID())
-                .id2(96L)
-                .nombre("Mate")
-                .modelo(Modelo.DISNEY)
-                .precio(200.0)
-                .fechaLanzamiento(LocalDate.parse("2021-10-07"))
-                .build();
+    void findByNombre() throws ExecutionException, InterruptedException {
+        Funko funko1 = Funko.builder().cod(UUID.randomUUID()).id2(95L).nombre("Rayo McQueen").modelo(Modelo.DISNEY).precio(100.0).fechaLanzamiento(LocalDate.parse("2021-10-07")).build();
+        Funko funko2 = Funko.builder().cod(UUID.randomUUID()).id2(96L).nombre("Mate").modelo(Modelo.DISNEY).precio(200.0).fechaLanzamiento(LocalDate.parse("2021-10-07")).build();
         funkoRepository.save(funko1).get();
         funkoRepository.save(funko2).get();
         List<Funko> foundFunkos = funkoRepository.findByNombre("Rayo McQueen").get();
@@ -161,43 +113,35 @@ class FunkoRepositoryTest {
     }
 
     @Test
-    void deleteById() throws SQLException, ExecutionException, InterruptedException, FunkoNotFoundException {
-        Funko funko1 = Funko.builder()
-                .cod(UUID.randomUUID())
-                .id2(95L)
-                .nombre("Rayo McQueen")
-                .modelo(Modelo.DISNEY)
-                .precio(100.0)
-                .fechaLanzamiento(LocalDate.parse("2021-10-07"))
-                .build();
-        Funko savedFunko = funkoRepository.save(funko1).get();
+    void deleteById() throws ExecutionException, InterruptedException, FunkoNotFoundException {
+        Funko funko = Funko.builder().cod(UUID.randomUUID()).id2(95L).nombre("Rayo McQueen").modelo(Modelo.DISNEY).precio(100.0).fechaLanzamiento(LocalDate.parse("2021-10-07")).build();
+        Funko savedFunko = funkoRepository.save(funko).get();
         funkoRepository.deleteById(savedFunko.getId2()).get();
         Optional<Funko> foundFunko = funkoRepository.findById(savedFunko.getId2()).get();
         assertFalse(foundFunko.isPresent());
     }
 
     @Test
-    void deleteAll() throws SQLException, ExecutionException, InterruptedException {
-        Funko funko1 = Funko.builder()
-                .cod(UUID.randomUUID())
-                .id2(95L)
-                .nombre("Rayo McQueen")
-                .modelo(Modelo.DISNEY)
-                .precio(100.0)
-                .fechaLanzamiento(LocalDate.parse("2021-10-07"))
-                .build();
-        Funko funko2 = Funko.builder()
-                .cod(UUID.randomUUID())
-                .id2(96L)
-                .nombre("Mate")
-                .modelo(Modelo.DISNEY)
-                .precio(200.0)
-                .fechaLanzamiento(LocalDate.parse("2021-10-07"))
-                .build();
+    void deleteAll() throws ExecutionException, InterruptedException {
+        Funko funko1 = Funko.builder().cod(UUID.randomUUID()).id2(95L).nombre("Rayo McQueen").modelo(Modelo.DISNEY).precio(100.0).fechaLanzamiento(LocalDate.parse("2021-10-07")).build();
+        Funko funko2 = Funko.builder().cod(UUID.randomUUID()).id2(96L).nombre("Mate").modelo(Modelo.DISNEY).precio(200.0).fechaLanzamiento(LocalDate.parse("2021-10-07")).build();
         funkoRepository.save(funko1).get();
         funkoRepository.save(funko2).get();
+        List<Funko> foundFunkos1 = funkoRepository.findAll().get();
+        assertEquals(2, foundFunkos1.size());
         funkoRepository.deleteAll().get();
         List<Funko> foundFunkos = funkoRepository.findAll().get();
         assertEquals(0, foundFunkos.size());
+    }
+
+    @Test
+    void testExportJson() throws ExecutionException, InterruptedException {
+        String ruta = Routes.getInstance().getRouteFunkosJson();
+        assertDoesNotThrow(() -> funkoRepository.exportJson(ruta).get());
+        File file = new File(ruta);
+        assertAll(
+                () -> assertTrue(file.exists()),
+                () -> assertTrue(file.length() > 0)
+        );
     }
 }

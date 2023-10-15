@@ -23,6 +23,9 @@ public class FunkoController {
     Routes routes = Routes.getInstance();
     private final static Lock lock = new ReentrantLock();
 
+    private FunkoController() {
+    }
+
     public static FunkoController getInstance() {
         if (instance == null) {
             lock.lock();
@@ -33,6 +36,7 @@ public class FunkoController {
     }
 
     public CompletableFuture<List<Funko>> loadCsv() {
+        funkos.clear();
         return CompletableFuture.supplyAsync(() -> {
             try (BufferedReader br = new BufferedReader(new FileReader(routes.getRouteFunkosCsv()))) {
                 String line = br.readLine();

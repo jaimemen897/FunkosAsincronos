@@ -19,7 +19,7 @@ class FunkoControllerTest {
     @BeforeEach
     void setUp() throws Exception {
         funkoController = FunkoController.getInstance();
-        funkoController.getFunkos().clear();
+        funkoController.loadCsv().get();
     }
 
     @AfterEach
@@ -28,7 +28,7 @@ class FunkoControllerTest {
     }
 
     @Test
-    void loadCsv() throws Exception {
+    void loadCsvTest() throws Exception {
         Callable<List<Funko>> loadCsv = () -> funkoController.loadCsv().get();
         loadCsv.call();
         assertAll(
@@ -39,8 +39,6 @@ class FunkoControllerTest {
 
     @Test
     void expensiveFunko() throws Exception {
-        Callable<List<Funko>> loadCsv = () -> funkoController.loadCsv().get();
-        loadCsv.call();
         Callable<Funko> expensiveFunko = () -> funkoController.expensiveFunko().get();
         expensiveFunko.call();
         assertAll(
@@ -53,8 +51,6 @@ class FunkoControllerTest {
 
     @Test
     void averagePrice() throws Exception {
-        Callable<List<Funko>> loadCsv = () -> funkoController.loadCsv().get();
-        loadCsv.call();
         Callable<Double> averagePrice = () -> funkoController.averagePrice().get();
         averagePrice.call();
         assertAll(
@@ -65,8 +61,6 @@ class FunkoControllerTest {
 
     @Test
     void groupByModelo() throws Exception {
-        Callable<List<Funko>> loadCsv = () -> funkoController.loadCsv().get();
-        loadCsv.call();
         Callable<Map<Modelo, List<Funko>>> groupByModelo = () -> funkoController.groupByModelo().get();
         groupByModelo.call();
         assertAll(
@@ -77,8 +71,6 @@ class FunkoControllerTest {
 
     @Test
     void funkosByModelo() throws Exception {
-        Callable<List<Funko>> loadCsv = () -> funkoController.loadCsv().get();
-        loadCsv.call();
         Callable<Map<Modelo, Long>> funkosByModelo = () -> funkoController.funkosByModelo().get();
         funkosByModelo.call();
         assertAll(
@@ -93,8 +85,6 @@ class FunkoControllerTest {
 
     @Test
     void funkosIn2023() throws Exception {
-        Callable<List<Funko>> loadCsv = () -> funkoController.loadCsv().get();
-        loadCsv.call();
         Callable<List<Funko>> funkosIn2023 = () -> funkoController.funkosIn2023().get();
         funkosIn2023.call();
         assertAll(
@@ -106,8 +96,6 @@ class FunkoControllerTest {
 
     @Test
     void numberStitch() throws Exception {
-        Callable<List<Funko>> loadCsv = () -> funkoController.loadCsv().get();
-        loadCsv.call();
         Callable<Double> numberStitch = () -> funkoController.numberStitch().get();
         numberStitch.call();
         assertAll(
@@ -118,8 +106,6 @@ class FunkoControllerTest {
 
     @Test
     void funkoStitch() throws Exception {
-        Callable<List<Funko>> loadCsv = () -> funkoController.loadCsv().get();
-        loadCsv.call();
         Callable<List<Funko>> funkoStitch = () -> funkoController.funkoStitch().get();
         funkoStitch.call();
         var result = funkoController.funkoStitch().get().get(0).getNombre().contains("Stitch");
