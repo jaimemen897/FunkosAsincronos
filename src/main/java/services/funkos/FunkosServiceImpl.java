@@ -1,5 +1,6 @@
 package services.funkos;
 
+import controllers.FunkoController;
 import exceptions.Funko.FunkoNotFoundException;
 import exceptions.Funko.FunkoNotStoragedException;
 import models.Funko;
@@ -19,6 +20,7 @@ public class FunkosServiceImpl implements FunkosService {
     private final FunkoCache cache;
     private final Logger logger = LoggerFactory.getLogger(FunkosServiceImpl.class);
     private final FunkoRepositoryImpl funkoRepository;
+    private final FunkoController funkoController = FunkoController.getInstance();
     private static final Lock lock = new ReentrantLock();
 
     private FunkosServiceImpl(FunkoRepositoryImpl funkoRepository) {
@@ -107,5 +109,16 @@ public class FunkosServiceImpl implements FunkosService {
 
     public void close() {
         cache.shutdown();
+    }
+
+    public void exportToJson(String ruta) throws ExecutionException, InterruptedException {
+        funkoRepository.exportJson(ruta).get();
+    }
+
+    public void importFromCsv() throws ExecutionException, InterruptedException, FunkoNotStoragedException {
+        funkoController.loadCsv().get();
+        for (Funko funko : funkoController.getFunkos()) {
+            save(funko);
+        }
     }
 }

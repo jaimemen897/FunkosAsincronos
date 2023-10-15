@@ -1,7 +1,6 @@
 package services.funkos;
 
 import enums.Modelo;
-import exceptions.BD.InsertDataToBd;
 import exceptions.Funko.FunkoNotFoundException;
 import exceptions.Funko.FunkoNotStoragedException;
 import models.Funko;
@@ -11,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import repositories.funkos.FunkoRepositoryImpl;
+import routes.Routes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -235,6 +235,5 @@ class FunkosServiceImplTest {
         service.deleteAll();
 
         verify(funkoRepository, times(1)).deleteAll();
-
     }
 }
