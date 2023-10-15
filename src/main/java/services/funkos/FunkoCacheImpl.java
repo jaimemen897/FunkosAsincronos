@@ -85,7 +85,6 @@ public class FunkoCacheImpl implements FunkoCache {
         } finally {
             lock.unlock();
         }
-
     }
 
     @Override
