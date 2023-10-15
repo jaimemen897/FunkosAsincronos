@@ -9,7 +9,6 @@ import routes.Routes;
 import services.database.DataBaseManager;
 import services.funkos.FunkosServiceImpl;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -20,7 +19,6 @@ public class Main {
         FunkoRepositoryImpl funkoRepository = FunkoRepositoryImpl.getInstance(DataBaseManager.getInstance());
         FunkosServiceImpl funkosService = FunkosServiceImpl.getInstance(funkoRepository);
         Routes routes = Routes.getInstance();
-
 
         System.out.println("-------------------------- OBTENCION DE DATOS --------------------------");
         ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -33,7 +31,6 @@ public class Main {
         Callable<List<Funko>> funkosIn2023 = () -> funkoController.funkosIn2023().get();
         Callable<Double> numberStitch = () -> funkoController.numberStitch().get();
         Callable<List<Funko>> funkoStitch = () -> funkoController.funkoStitch().get();
-
 
         Future<List<Funko>> future = executorService.submit(loadCsv);
         Future<Funko> future2 = executorService.submit(expensiveFunko);

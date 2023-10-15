@@ -16,12 +16,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class FunkosServiceImpl implements FunkosService {
 
+    private static final Lock lock = new ReentrantLock();
     private static FunkosServiceImpl instance;
     private final FunkoCache cache;
     private final Logger logger = LoggerFactory.getLogger(FunkosServiceImpl.class);
     private final FunkoRepositoryImpl funkoRepository;
     private final FunkoController funkoController = FunkoController.getInstance();
-    private static final Lock lock = new ReentrantLock();
 
     private FunkosServiceImpl(FunkoRepositoryImpl funkoRepository) {
         this.funkoRepository = funkoRepository;
@@ -37,7 +37,6 @@ public class FunkosServiceImpl implements FunkosService {
         return instance;
     }
 
-
     @Override
     public List<Funko> findAll() throws ExecutionException, InterruptedException {
         return funkoRepository.findAll().get();
@@ -46,7 +45,7 @@ public class FunkosServiceImpl implements FunkosService {
     @Override
     public List<Funko> findByNombre(String nombre) throws ExecutionException, InterruptedException, FunkoNotFoundException {
         List<Funko> funkos = funkoRepository.findByNombre(nombre).get();
-        if (funkos.isEmpty()){
+        if (funkos.isEmpty()) {
             throw new FunkoNotFoundException("No se ha encontrado ningún funko con el nombre: " + nombre);
         }
         return funkoRepository.findByNombre(nombre).get();

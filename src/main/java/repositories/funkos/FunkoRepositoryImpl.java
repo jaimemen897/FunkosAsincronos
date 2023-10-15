@@ -4,9 +4,9 @@ import adapters.LocalDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import enums.Modelo;
-import exceptions.File.ErrorInFile;
 import exceptions.BD.GetDataFromBD;
 import exceptions.BD.InsertDataToBd;
+import exceptions.File.ErrorInFile;
 import exceptions.Funko.FunkoNotFoundException;
 import models.Funko;
 import org.slf4j.Logger;
@@ -27,10 +27,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class FunkoRepositoryImpl implements FunkoRepository {
+    private static final Lock lock = new ReentrantLock();
     private static FunkoRepositoryImpl instance;
     private final Logger logger = LoggerFactory.getLogger(FunkoRepositoryImpl.class);
     private final DataBaseManager db;
-    private static final Lock lock = new ReentrantLock();
 
     private FunkoRepositoryImpl(DataBaseManager db) {
         this.db = db;
@@ -165,7 +165,6 @@ public class FunkoRepositoryImpl implements FunkoRepository {
             }
             return true;
         });
-
     }
 
     @Override

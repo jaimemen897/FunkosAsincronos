@@ -17,9 +17,8 @@ public class FunkoCacheImpl implements FunkoCache {
     private final Logger logger = LoggerFactory.getLogger(FunkoCacheImpl.class);
     private final int maxSize = 10;
     private final Map<Long, Funko> cache;
-    Lock lock = new ReentrantLock();
     private final ScheduledExecutorService cleaner;
-
+    Lock lock = new ReentrantLock();
 
     public FunkoCacheImpl() {
         this.cache = new LinkedHashMap<>(maxSize, 0.75f, true) {
@@ -28,10 +27,7 @@ public class FunkoCacheImpl implements FunkoCache {
                 return size() > maxSize;
             }
         };
-        //Crea el programador para la limpieza automatica
         this.cleaner = Executors.newSingleThreadScheduledExecutor();
-
-        //Programar la limpieza cada dos minutos
         this.cleaner.scheduleAtFixedRate(this::clear, 2, 2, TimeUnit.MINUTES);
     }
 

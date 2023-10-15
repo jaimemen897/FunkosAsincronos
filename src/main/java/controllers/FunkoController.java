@@ -7,7 +7,9 @@ import models.Funko;
 import models.IdGenerator;
 import routes.Routes;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -17,11 +19,11 @@ import java.util.stream.Collectors;
 
 @Getter
 public class FunkoController {
+    private final static Lock lock = new ReentrantLock();
     private static FunkoController instance;
     private final List<Funko> funkos = new ArrayList<>();
     private final IdGenerator idGenerator = IdGenerator.getInstance();
     Routes routes = Routes.getInstance();
-    private final static Lock lock = new ReentrantLock();
 
     private FunkoController() {
     }

@@ -61,7 +61,7 @@ Por lo tanto nuestra estructura es:
 - [x] Repositorio de Funkos asíncrono al que se le inyecta el IdGenerator y DatabaseManager, tiene una instancia única.
 - [x] Servicio de Almacenamiento asíncrono para importar de CSV y exportar a JSON, tiene una instancia única.
 - [x] Cache asíncrona de Funkos.
-- [ ] Servicio de Funkos al que se le inyecta: Repositorio de Funkos, Caché de Funkos, y Servicio de Almacenamiento. Ten
+- [x] Servicio de Funkos al que se le inyecta: Repositorio de Funkos, Caché de Funkos, y Servicio de Almacenamiento. Ten
   en cuenta lo que se te indica en los test para implementar los métodos correctamente.
 
 Se debe mostrar un ejemplo de cada uno de los métodos del servicio en el main con los casos de ejecución correcta e

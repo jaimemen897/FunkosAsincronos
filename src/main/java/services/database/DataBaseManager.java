@@ -18,18 +18,16 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @Getter
 public class DataBaseManager implements AutoCloseable {
+    private static final Lock lock = new ReentrantLock();
     private static DataBaseManager instance;
+    private static boolean initDataBase = false;
     private final Routes routes = Routes.getInstance();
     private final Logger logger = LoggerFactory.getLogger(DataBaseManager.class);
-
     private HikariDataSource hikariDataSource;
-    private static final Lock lock = new ReentrantLock();
-    private static boolean initDataBase = false;
 
     private DataBaseManager() {
         openConnection();
     }
-
 
     public static synchronized DataBaseManager getInstance() {
         if (instance == null) {
@@ -74,12 +72,10 @@ public class DataBaseManager implements AutoCloseable {
         }
     }
 
-
     @Override
     public void close() {
         hikariDataSource.close();
     }
-
 
     public Connection getConnection() {
         try {
@@ -89,5 +85,4 @@ public class DataBaseManager implements AutoCloseable {
             return null;
         }
     }
-
 }
