@@ -41,10 +41,10 @@ Vamos a trabajar totalmente asíncrono.
 - [x] Además, debes usar un servicio totalmente asíncrono que haga uso de este repositorio e implemente una caché
   totalmente asíncrona de 10 elementos máximo que más han sido accedidos
 - [x] Y expiren si llevan más de 2 minutos en la caché sin haber sido accedidos.
-- [ ] Este servicio hará uso de excepciones personalizadas de no chequeadas si no se puede realizar las
+- [x] Este servicio hará uso de excepciones personalizadas de no chequeadas si no se puede realizar las
   operaciones indicadas.
 
-- [ ] Este servicio tendrá un método backup que exporta los datos en JSON a una ruta pasada de manera asíncrona, solo si
+- [x] Este servicio tendrá un método backup que exporta los datos en JSON a una ruta pasada de manera asíncrona, solo si
   esta es válida, si no producirá una excepción personalizada y un método import para importarlos de manera asíncrona
   desde el CSV.
 
@@ -60,7 +60,7 @@ Por lo tanto nuestra estructura es:
 - [x] IdGenerator asíncrono y protegido en entornos multihilo con instancia única.
 - [x] Repositorio de Funkos asíncrono al que se le inyecta el IdGenerator y DatabaseManager, tiene una instancia única.
 - [x] Servicio de Almacenamiento asíncrono para importar de CSV y exportar a JSON, tiene una instancia única.
-- [ ] Cache asíncrona de Funkos.
+- [x] Cache asíncrona de Funkos.
 - [ ] Servicio de Funkos al que se le inyecta: Repositorio de Funkos, Caché de Funkos, y Servicio de Almacenamiento. Ten
   en cuenta lo que se te indica en los test para implementar los métodos correctamente.
 
@@ -79,18 +79,18 @@ Se debe además sacar las consultas en el main de manera asíncrona:
 
 Finalmente se pide testear todos los caso correctos o incorrectos de los métodos de:
 
-- [ ] Caché
-- [ ] Repositorio
-- [ ] Servicio de Almacenamiento
-- [ ] Servicio de Funkos.
+- [x] Caché
+- [x] Repositorio
+- [x] Servicio de Almacenamiento
+- [x] Servicio de Funkos.
 
-- [ ] Se recomienda usar un Logger en todo el proceso.
+- [x] Se recomienda usar un Logger en todo el proceso.
 
 Entrega
 
 Para entregar se debe crear un repositorio con el código siguiendo GitFlow.
 
-- [ ] En el README.md de tu proyecto debes explicar cómo has realizado el proceso y mostrar capturas del proceso y
+- [x] En el README.md de tu proyecto debes explicar cómo has realizado el proceso y mostrar capturas del proceso y
   analizar
   los distintos elementos y cómo se han desarrollado. Posteriormente se incluirá el enlace del repositorio en el aula
   virtual.
